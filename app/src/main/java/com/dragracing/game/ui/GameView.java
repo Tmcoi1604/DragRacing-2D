@@ -150,8 +150,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         shiftUpRect.set(cx + radius + 10, paddleBottom - paddleHeight,
             cx + radius + paddleWidth + 20, paddleBottom);
 
-        // Nitro Button (Replaces Gas Pedal after start)
-        nitroButtonRect.set(gasPedalRect);
+        // Nitro button moved to the left side of the dashboard, matching the reference layout
+        float nitroSize = Math.min(120.0f, width * 0.15f);
+        float nitroCenterX = Math.max(padding + nitroSize * 0.7f, width * 0.12f);
+        float nitroCenterY = height * 0.74f;
+        nitroButtonRect.set(
+            nitroCenterX - nitroSize * 0.5f,
+            nitroCenterY - nitroSize * 0.5f,
+            nitroCenterX + nitroSize * 0.5f,
+            nitroCenterY + nitroSize * 0.5f
+        );
 
         // Pause Button (Top Left)
         float pauseSize = 60.0f;
@@ -344,9 +352,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         canvas.drawPath(cockpitPath, panelPaint);
 
         CarPhysics player = raceEngine.getPlayerCar();
-        float cx = width / 2.0f;
-            float gaugeRadius = Math.min((height - dashTop) * 0.62f, width * 0.17f);
-        float cy = height - Math.max(12.0f, gaugeRadius * 0.08f);
+        float cx = width * 0.62f;
+        float gaugeRadius = Math.min((height - dashTop) * 0.52f, width * 0.22f);
+        float cy = height - Math.max(18.0f, gaugeRadius * 0.55f);
 
         // 1. Central Speedometer
         drawModernSpeedometer(canvas, cx, cy, gaugeRadius, player);
@@ -459,19 +467,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     private void drawInfoBoxes(Canvas canvas, float cx, float cy, float radius, CarPhysics player) {
         hudBgPaint.setColor(Color.argb(220, 30, 35, 40));
-        
-        // Gear Box (Right side of the gauge center)
-        float boxW = 80, boxH = 60;
-        canvas.drawRect(cx + radius * 0.4f, cy - 80, cx + radius * 0.4f + boxW, cy - 20, hudBgPaint);
-        
+
+        float boxW = 96f;
+        float boxH = 86f;
+        float boxX = cx + radius + 24f;
+        float boxY = cy - 62f;
+        canvas.drawRoundRect(boxX, boxY, boxX + boxW, boxY + boxH, 18f, 18f, hudBgPaint);
+
         textPaint.setColor(Color.parseColor("#FFD600"));
-        textPaint.setTextSize(36.0f);
+        textPaint.setTextSize(40.0f);
         textPaint.setTextAlign(Paint.Align.CENTER);
         String gear = !player.isHasLaunched() ? "N" : String.valueOf(player.getCurrentGear());
-        canvas.drawText(gear, cx + radius * 0.4f + boxW / 2f, cy - 45, textPaint);
+        canvas.drawText(gear, boxX + boxW / 2f, boxY + 44f, textPaint);
         textPaint.setTextSize(12.0f);
         textPaint.setColor(Color.GRAY);
-        canvas.drawText("GEAR", cx + radius * 0.4f + boxW / 2f, cy - 30, textPaint);
+        canvas.drawText("GEAR", boxX + boxW / 2f, boxY + 62f, textPaint);
     }
 
     private void drawPaddleShifters(Canvas canvas, float cx, float cy, float radius) {
@@ -553,7 +563,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             textPaint.setTextSize(36.0f);
             canvas.drawText("GIỮ GA!", width / 2f, trackAreaBottom - 20, textPaint);
         }
-        
+
         CarPhysics player = raceEngine.getPlayerCar();
         if (player.isLaunchFeedback()) {
             CarPhysics.LaunchResult launchRes = player.getLastLaunchResult();
@@ -573,18 +583,41 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         } else {
             CarPhysics.ShiftResult shiftRes = player.getLastShiftResult();
             if (shiftRes != CarPhysics.ShiftResult.NONE) {
-                textPaint.setTextSize(36.0f);
-                if (shiftRes == CarPhysics.ShiftResult.PERFECT) {
-                    textPaint.setColor(Color.GREEN);
-                    canvas.drawText("PERFECT SHIFT", width / 2f, trackAreaBottom - 60, textPaint);
-                } else if (shiftRes == CarPhysics.ShiftResult.OVER_REV) {
-                    textPaint.setColor(Color.RED);
-                    canvas.drawText("OVER REV", width / 2f, trackAreaBottom - 60, textPaint);
-                } else {
-                    textPaint.setColor(Color.YELLOW);
-                    canvas.drawText("GOOD SHIFT", width / 2f, trackAreaBottom - 60, textPaint);
-                }
+                drawShiftIndicator(canvas, width / 2f, trackAreaBottom - 90f, shiftRes);
             }
+        }
+    }
+
+    private void drawShiftIndicator(Canvas canvas, float centerX, float centerY, CarPhysics.ShiftResult shiftRes) {
+        float lightSize = 18f;
+        float spacing = 24f;
+        float startX = centerX - (lightSize * 2.5f + spacing * 2f);
+
+        int activeLights = 0;
+        int primaryColor = Color.parseColor("#4CAF50");
+        if (shiftRes == CarPhysics.ShiftResult.OVER_REV) {
+            primaryColor = Color.parseColor("#F44336");
+            activeLights = 1;
+        } else if (shiftRes == CarPhysics.ShiftResult.GOOD) {
+            primaryColor = Color.parseColor("#FFC107");
+            activeLights = 2;
+        } else if (shiftRes == CarPhysics.ShiftResult.PERFECT) {
+            primaryColor = Color.parseColor("#4CAF50");
+            activeLights = 3;
+        }
+
+        Paint lightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        for (int i = 0; i < 3; i++) {
+            float x = startX + i * (lightSize + spacing);
+            float y = centerY;
+            lightPaint.setColor(i < activeLights ? primaryColor : Color.argb(120, 255, 255, 255));
+            lightPaint.setStyle(Paint.Style.FILL);
+            canvas.drawCircle(x, y, lightSize * 0.8f, lightPaint);
+
+            lightPaint.setColor(i < activeLights ? Color.argb(180, 255, 255, 255) : Color.argb(60, 255, 255, 255));
+            lightPaint.setStyle(Paint.Style.STROKE);
+            lightPaint.setStrokeWidth(2f);
+            canvas.drawCircle(x, y, lightSize * 0.95f, lightPaint);
         }
     }
 
