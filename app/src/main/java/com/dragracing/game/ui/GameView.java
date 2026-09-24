@@ -3,11 +3,17 @@ package com.dragracing.game.ui;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.graphics.Shader;
+import android.util.Base64;
+import android.util.Log;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -50,6 +56,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private final RectF shiftDownRect = new RectF();
     private final RectF nitroButtonRect = new RectF();
     private final RectF pauseButtonRect = new RectF();
+    private final RectF speedometerRect = new RectF();
 
     private boolean gasPedalPressed = false;
     private boolean finishReported = false;
@@ -57,9 +64,67 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     private String shiftFeedbackText = "";
     private float lastWidth, lastHeight;
+    private Bitmap speedometerBitmap;
+    private Bitmap clockwiseBitmap;
+    private Bitmap shiftUpBitmap;
+    private Bitmap shiftDownBitmap;
+    private Bitmap nitrousBitmap;
+    private Bitmap gasBitmap;
+    private Bitmap[] shiftUpAnimation;
+    private Bitmap[] overrevAnimation;
+    private long animationStartedAt;
+    private Bitmap[] activeAnimation;
 
     public RaceEngine getRaceEngine() { return raceEngine; }
     public TrackRenderer getTrackRenderer() { return trackRenderer; }
+
+    private void loadHudAssets() {
+        speedometerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.speedometer);
+        clockwiseBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.clockwise);
+        shiftUpBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.shift_up);
+        shiftDownBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.shift_down);
+        nitrousBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.active_nitrous);
+        gasBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.gas);
+        shiftUpAnimation = loadPiskelAnimation(R.raw.shift_up_animation);
+        overrevAnimation = loadPiskelAnimation(R.raw.overev_animation);
+    }
+
+    private Bitmap[] loadPiskelAnimation(int resourceId) {
+        try (InputStream stream = getResources().openRawResource(resourceId)) {
+            String json = new String(readAll(stream), StandardCharsets.UTF_8);
+            JSONObject piskel = new JSONObject(new JSONObject(json).getString("piskel"));
+            JSONArray layers = new JSONArray(piskel.getString("layers"));
+            if (layers.length() == 0) return new Bitmap[0];
+            JSONObject chunk = layers.getJSONObject(0).getJSONArray("chunks").getJSONObject(0);
+            String encoded = chunk.getString("base64PNG");
+            int comma = encoded.indexOf(',');
+            if (comma >= 0) encoded = encoded.substring(comma + 1);
+            byte[] png = Base64.decode(encoded, Base64.DEFAULT);
+            Bitmap sheet = BitmapFactory.decodeByteArray(png, 0, png.length);
+            int frameWidth = piskel.getInt("width");
+            int frameHeight = piskel.getInt("height");
+            JSONArray layout = chunk.getJSONArray("layout");
+            int frameCount = layout.length();
+            Bitmap[] frames = new Bitmap[frameCount];
+            for (int i = 0; i < frameCount; i++) {
+                int x = (sheet.getWidth() >= frameWidth * frameCount) ? i * frameWidth : 0;
+                int y = (sheet.getHeight() >= frameHeight * frameCount) ? i * frameHeight : 0;
+                frames[i] = Bitmap.createBitmap(sheet, x, y, frameWidth, frameHeight);
+            }
+            return frames;
+        } catch (Exception error) {
+            Log.e("GameView", "Unable to load Piskel animation resource " + resourceId, error);
+            return new Bitmap[0];
+        }
+    }
+
+    private byte[] readAll(InputStream stream) throws java.io.IOException {
+        java.io.ByteArrayOutputStream output = new java.io.ByteArrayOutputStream();
+        byte[] buffer = new byte[8192];
+        int count;
+        while ((count = stream.read(buffer)) != -1) output.write(buffer, 0, count);
+        return output.toByteArray();
+    }
 
     public GameView(Context context, RaceEngine raceEngine, RaceFinishListener finishListener) {
         super(context);
@@ -90,6 +155,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         panelPaint.setAntiAlias(false);
 
         hudBgPaint.setColor(Color.argb(200, 15, 18, 24));
+        loadHudAssets();
     }
 
     @Override
@@ -127,33 +193,35 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         float dashHeight = height - dashTop;
         float padding = 20.0f;
 
-        // Center Tachometer
-        float cx = width / 2.0f;
-        float radius = Math.min(dashHeight * 0.62f, width * 0.17f);
-        float cy = height - Math.max(12.0f, radius * 0.08f); // Keep the gauge inside the surface
+        float gaugeWidth = Math.min(width * 0.62f, 666.0f);
+        float gaugeHeight = gaugeWidth * 375.0f / 666.0f;
+        float gaugeLeft = (width - gaugeWidth) * 0.5f;
+        float gaugeTop = Math.max(dashTop, height - gaugeHeight - 8.0f);
+        speedometerRect.set(gaugeLeft, gaugeTop, gaugeLeft + gaugeWidth, gaugeTop + gaugeHeight);
+        float cx = speedometerRect.centerX();
+        float radius = gaugeWidth * 0.32f;
 
         // Vertical Gas Pedal on the Right (Upper part of dash to avoid overlap)
-        float gasWidth = 70.0f;
-        float gasHeight = 160.0f;
-        gasPedalRect.set(width - gasWidth - padding * 2, dashTop - gasHeight * 0.4f, width - padding * 2, dashTop + gasHeight * 0.6f);
+        float gasSize = Math.min(96.0f, dashHeight * 0.58f);
+        gasPedalRect.set(padding, height - gasSize - 12.0f, padding + gasSize, height - 12.0f);
 
         // Shift Paddles flanking the tachometer - Enlarged
-        float paddleWidth = Math.min(140.0f, width * 0.10f);
-        float paddleHeight = Math.min(180.0f, dashHeight * 0.72f);
-        float paddleBottom = height - 16.0f;
+        float paddleWidth = Math.min(72.0f, width * 0.08f);
+        float paddleHeight = Math.min(96.0f, dashHeight * 0.62f);
+        float paddleBottom = height - 12.0f;
         
         // Shift Down (Left)
-        shiftDownRect.set(cx - radius - paddleWidth - 20, paddleBottom - paddleHeight,
-            cx - radius - 10, paddleBottom);
+        shiftDownRect.set(speedometerRect.left - paddleWidth - 12, paddleBottom - paddleHeight,
+            speedometerRect.left - 12, paddleBottom);
         
         // Shift Up (Right)
-        shiftUpRect.set(cx + radius + 10, paddleBottom - paddleHeight,
-            cx + radius + paddleWidth + 20, paddleBottom);
+        shiftUpRect.set(speedometerRect.right + 12, paddleBottom - paddleHeight,
+            speedometerRect.right + paddleWidth + 12, paddleBottom);
 
         // Nitro button moved to the left side of the dashboard, matching the reference layout
-        float nitroSize = Math.min(120.0f, width * 0.15f);
-        float nitroCenterX = Math.max(padding + nitroSize * 0.7f, width * 0.12f);
-        float nitroCenterY = height * 0.74f;
+        float nitroSize = Math.min(72.0f, width * 0.10f);
+        float nitroCenterX = padding + nitroSize * 0.5f;
+        float nitroCenterY = height - nitroSize - 28.0f;
         nitroButtonRect.set(
             nitroCenterX - nitroSize * 0.5f,
             nitroCenterY - nitroSize * 0.5f,
@@ -352,18 +420,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         canvas.drawPath(cockpitPath, panelPaint);
 
         CarPhysics player = raceEngine.getPlayerCar();
-        float cx = width * 0.62f;
-        float gaugeRadius = Math.min((height - dashTop) * 0.52f, width * 0.22f);
-        float cy = height - Math.max(18.0f, gaugeRadius * 0.55f);
-
-        // 1. Central Speedometer
-        drawModernSpeedometer(canvas, cx, cy, gaugeRadius, player);
-
-        // 2. Info Boxes
-        drawInfoBoxes(canvas, cx, cy, gaugeRadius, player);
-
-        // 3. Paddle Shifters
-        drawPaddleShifters(canvas, cx, cy, gaugeRadius);
+        drawSpeedometer(canvas, player);
+        drawPaddleShifters(canvas);
 
         // 4. Nitro
         if (raceEngine.getState() == RaceEngine.RaceState.RACING && player.getCar().getNitroLevel() > 0) {
@@ -377,6 +435,47 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         if (raceEngine.getState() != RaceEngine.RaceState.RACING && raceEngine.getState() != RaceEngine.RaceState.FINISHED) {
             drawVerticalGasPedal(canvas);
         }
+    }
+
+    private void drawSpeedometer(Canvas canvas, CarPhysics player) {
+        Bitmap gauge = speedometerBitmap;
+        if (activeAnimation != null) {
+            long elapsed = System.currentTimeMillis() - animationStartedAt;
+            int frame = (int) (elapsed / 80L);
+            if (frame >= activeAnimation.length) {
+                activeAnimation = null;
+            } else {
+                gauge = activeAnimation[frame];
+            }
+        }
+        if (gauge != null) {
+            canvas.drawBitmap(gauge, null, speedometerRect, gaugePaint);
+        }
+
+        float centerX = speedometerRect.centerX();
+        float centerY = speedometerRect.centerY();
+        float maxRpm = (float) player.getCar().getMaxRpm();
+        float rpm = (float) Math.max(0.0, Math.min(maxRpm, player.getRpm()));
+        float angle = 215.0f + (rpm / maxRpm) * 110.0f;
+        canvas.save();
+        canvas.rotate(angle, centerX, centerY);
+        if (clockwiseBitmap != null) {
+            float needleSize = speedometerRect.width() * 0.14f;
+            canvas.drawBitmap(clockwiseBitmap, null,
+                    new RectF(centerX - needleSize * 0.5f, centerY - needleSize * 0.5f,
+                            centerX + needleSize * 0.5f, centerY + needleSize * 0.5f), gaugePaint);
+        }
+        canvas.restore();
+
+        textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint.setTextSize(Math.max(14.0f, speedometerRect.width() * 0.035f));
+        textPaint.setColor(Color.WHITE);
+        canvas.drawText(String.valueOf((int) player.getSpeedKmh()),
+                speedometerRect.left + speedometerRect.width() * 0.27f,
+                speedometerRect.top + speedometerRect.height() * 0.84f, textPaint);
+        canvas.drawText(!player.isHasLaunched() ? "N" : String.valueOf(player.getCurrentGear()),
+                speedometerRect.left + speedometerRect.width() * 0.74f,
+                speedometerRect.top + speedometerRect.height() * 0.84f, textPaint);
     }
 
     private void drawModernSpeedometer(Canvas canvas, float cx, float cy, float radius, CarPhysics player) {
@@ -484,61 +583,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         canvas.drawText("GEAR", boxX + boxW / 2f, boxY + 62f, textPaint);
     }
 
-    private void drawPaddleShifters(Canvas canvas, float cx, float cy, float radius) {
-        buttonPaint.setColor(Color.argb(180, 80, 85, 90));
-        
-        // Down Paddle (Left) - Bigger and adjusted
-        canvas.drawRoundRect(shiftDownRect, 15, 15, buttonPaint);
-        textPaint.setColor(Color.WHITE);
-        textPaint.setTextSize(48.0f);
-        textPaint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText("▼", shiftDownRect.centerX(), shiftDownRect.centerY(), textPaint);
-        textPaint.setTextSize(16.0f);
-        canvas.drawText("DOWN", shiftDownRect.centerX(), shiftDownRect.centerY() + 50, textPaint);
-
-        // Up Paddle (Right) - Bigger and adjusted
-        buttonPaint.setColor(Color.argb(180, 80, 85, 90));
-        canvas.drawRoundRect(shiftUpRect, 15, 15, buttonPaint);
-        textPaint.setColor(Color.parseColor("#00E676"));
-        textPaint.setTextSize(48.0f);
-        canvas.drawText("▲", shiftUpRect.centerX(), shiftUpRect.centerY(), textPaint);
-        textPaint.setTextSize(16.0f);
-        canvas.drawText("UP", shiftUpRect.centerX(), shiftUpRect.centerY() + 50, textPaint);
+    private void drawPaddleShifters(Canvas canvas) {
+        if (shiftDownBitmap != null) {
+            canvas.drawBitmap(shiftDownBitmap, null, shiftDownRect, buttonPaint);
+        }
+        if (shiftUpBitmap != null) {
+            canvas.drawBitmap(shiftUpBitmap, null, shiftUpRect, buttonPaint);
+        }
     }
 
     private void drawVerticalGasPedal(Canvas canvas) {
-        buttonPaint.setColor(Color.parseColor("#424242"));
-        canvas.drawRect(gasPedalRect, buttonPaint);
-        
-        // Bevel for pixel look
-        buttonPaint.setColor(Color.parseColor("#757575"));
-        canvas.drawRect(gasPedalRect.left, gasPedalRect.top, gasPedalRect.right, gasPedalRect.top + 4, buttonPaint);
-        canvas.drawRect(gasPedalRect.left, gasPedalRect.top, gasPedalRect.left + 4, gasPedalRect.bottom, buttonPaint);
-        
-        buttonPaint.setColor(Color.parseColor("#212121"));
-        canvas.drawRect(gasPedalRect.right - 4, gasPedalRect.top, gasPedalRect.right, gasPedalRect.bottom, buttonPaint);
-        canvas.drawRect(gasPedalRect.left, gasPedalRect.bottom - 4, gasPedalRect.right, gasPedalRect.bottom, buttonPaint);
-        
-        Paint dotPaint = new Paint();
-        dotPaint.setColor(Color.BLACK);
-        for (int i = 0; i < 4; i++) {
-            canvas.drawRect(gasPedalRect.centerX() - 15, gasPedalRect.top + 30 + i * 35, gasPedalRect.centerX() - 3, gasPedalRect.top + 30 + i * 35 + 8, dotPaint);
-            canvas.drawRect(gasPedalRect.centerX() + 3, gasPedalRect.top + 30 + i * 35, gasPedalRect.centerX() + 15, gasPedalRect.top + 30 + i * 35 + 8, dotPaint);
+        if (gasBitmap != null) {
+            canvas.drawBitmap(gasBitmap, null, gasPedalRect, buttonPaint);
         }
     }
 
     private void drawNitroButton(Canvas canvas, CarPhysics player) {
-        buttonPaint.setColor(player.isNitroActive() ? Color.CYAN : Color.parseColor("#0288D1"));
-        canvas.drawRect(nitroButtonRect, buttonPaint);
-        
-        // Bevel
-        buttonPaint.setColor(player.isNitroActive() ? Color.WHITE : Color.parseColor("#03A9F4"));
-        canvas.drawRect(nitroButtonRect.left, nitroButtonRect.top, nitroButtonRect.right, nitroButtonRect.top + 4, buttonPaint);
-        canvas.drawRect(nitroButtonRect.left, nitroButtonRect.top, nitroButtonRect.left + 4, nitroButtonRect.bottom, buttonPaint);
-        
-        textPaint.setColor(Color.WHITE);
-        textPaint.setTextSize(32.0f);
-        canvas.drawText("NOS", nitroButtonRect.centerX(), nitroButtonRect.centerY() + 10, textPaint);
+        if (nitrousBitmap != null) {
+            canvas.drawBitmap(nitrousBitmap, null, nitroButtonRect, buttonPaint);
+        }
     }
 
     private void drawPauseButton(Canvas canvas) {
@@ -651,8 +714,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
                     if (raceEngine.getState() == RaceEngine.RaceState.COUNTDOWN) {
                         raceEngine.playerLaunch();
                     }
-                    if (raceEngine.playerShiftUp() == CarPhysics.ShiftResult.PERFECT) {
+                    CarPhysics.ShiftResult shiftResult = raceEngine.playerShiftUp();
+                    if (shiftResult == CarPhysics.ShiftResult.PERFECT) {
+                        startAnimation(shiftUpAnimation);
                         soundManager.playPerfectShiftSound();
+                    } else if (shiftResult == CarPhysics.ShiftResult.OVER_REV) {
+                        startAnimation(overrevAnimation);
+                        soundManager.playShiftSound();
                     } else {
                         soundManager.playShiftSound();
                     }
@@ -670,5 +738,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
                 break;
         }
         return true;
+    }
+
+    private void startAnimation(Bitmap[] animation) {
+        if (animation != null && animation.length > 0) {
+            activeAnimation = animation;
+            animationStartedAt = System.currentTimeMillis();
+        }
     }
 }
