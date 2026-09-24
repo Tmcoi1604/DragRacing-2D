@@ -367,6 +367,8 @@ public class TrackRenderer {
 
         if (environmentType == EnvironmentType.TOKYO_NIGHT) {
             drawTokyoFarTrain(canvas, width, horizonY);
+        } else if (environmentType == EnvironmentType.COASTAL_DAY) {
+            drawCoastalSeaAndSky(canvas, width, horizonY, viewDistance, themeTileset);
         }
 
         // The first road tile is one half of the strip. Shrink it to one lane,
@@ -473,6 +475,38 @@ public class TrackRenderer {
         canvas.drawBitmap(tileset, source, destination, assetPaint);
         }
 
+        private void drawCoastalSeaAndSky(Canvas canvas, float width, float horizonY,
+                          double viewDistance, Bitmap coastalTileset) {
+        double worldX = viewDistance * 35.0;
+        float boatSpacing = 330.0f;
+        float boatOffset = (float) (worldX * 0.42 % boatSpacing);
+        Rect[] boatSources = {
+            new Rect(300, 285, 550, 485),
+            new Rect(555, 285, 810, 485),
+            new Rect(780, 285, 1024, 485)
+        };
+        for (int i = -1; i < (width / boatSpacing) + 2; i++) {
+            int boatIndex = Math.floorMod(i, boatSources.length);
+            float x = i * boatSpacing - boatOffset + width * 0.18f;
+            Rect source = boatSources[boatIndex];
+            float boatHeight = 42.0f;
+            float boatWidth = boatHeight * source.width() / source.height();
+            RectF destination = new RectF(x, horizonY - 92.0f,
+                x + boatWidth, horizonY - 92.0f + boatHeight);
+            canvas.drawBitmap(coastalTileset, source, destination, assetPaint);
+        }
+
+        Rect gullSource = new Rect(500, 690, 730, 820);
+        float gullSpacing = 250.0f;
+        float gullOffset = (float) (worldX * 0.18 % gullSpacing);
+        for (int i = -1; i < (width / gullSpacing) + 2; i++) {
+            float x = i * gullSpacing - gullOffset + 90.0f;
+            RectF destination = new RectF(x, horizonY - 180.0f,
+                x + 62.0f, horizonY - 145.0f);
+            canvas.drawBitmap(coastalTileset, gullSource, destination, assetPaint);
+        }
+        }
+
         private void drawTrackObjects(Canvas canvas, float width, float horizonY,
                           float trackAreaBottom, double viewDistance) {
         Bitmap tileset = loadAsset(environmentType.themeTilesetAsset());
@@ -487,6 +521,11 @@ public class TrackRenderer {
         if (environmentType == EnvironmentType.ABANDONED_INDUSTRIAL) {
             drawIndustrialRoadsideObjects(canvas, width, horizonY, trackAreaBottom,
                     viewDistance, tileset);
+            return;
+        }
+
+        if (environmentType == EnvironmentType.COASTAL_DAY) {
+            drawCoastalRoadsideObjects(canvas, width, horizonY, viewDistance, tileset);
             return;
         }
 
@@ -652,6 +691,59 @@ public class TrackRenderer {
                 RectF destination = new RectF(x, objectY,
                     x + objectWidth, horizonY + 5.0f);
             canvas.drawBitmap(tileset, source, destination, assetPaint);
+        }
+        }
+
+        private void drawCoastalRoadsideObjects(Canvas canvas, float width, float horizonY,
+                            double viewDistance, Bitmap coastalTileset) {
+        double worldX = viewDistance * 35.0;
+        float spacing = 190.0f;
+        float offset = (float) (worldX % spacing);
+        long baseIndex = (long) Math.floor(worldX / spacing);
+
+        Rect[] roadsideSources = {
+            new Rect(0, 0, 345, 315),       // palm cluster
+            new Rect(555, 0, 810, 275),     // tall palm
+            new Rect(225, 520, 455, 705),   // small sand castle
+            new Rect(390, 510, 625, 705),   // large sand castle
+            new Rect(830, 785, 1024, 1024)  // clam shack
+        };
+        float[] heights = { 94.0f, 88.0f, 52.0f, 62.0f, 58.0f };
+
+        for (int i = -1; i < (width / spacing) + 2; i++) {
+            long absoluteIndex = baseIndex + i;
+            int index = Math.floorMod(absoluteIndex, roadsideSources.length);
+            Rect source = roadsideSources[index];
+            float objectHeight = heights[index];
+            float objectWidth = objectHeight * source.width() / source.height();
+            float x = i * spacing - offset;
+            float objectY = horizonY - objectHeight + 4.0f;
+            RectF destination = new RectF(x, objectY, x + objectWidth, horizonY + 4.0f);
+            canvas.drawBitmap(coastalTileset, source, destination, assetPaint);
+        }
+
+        drawCoastalSigns(canvas, width, horizonY, worldX, coastalTileset);
+        }
+
+        private void drawCoastalSigns(Canvas canvas, float width, float horizonY,
+                          double worldX, Bitmap coastalTileset) {
+        Bitmap baseTileset = loadAsset("tilesets");
+        Rect coastalSign = new Rect(0, 735, 250, 1024);
+        Rect speedSign = new Rect(270, 735, 380, 925);
+        float spacing = 360.0f;
+        float offset = (float) (worldX * 0.82 % spacing);
+        long baseIndex = (long) Math.floor(worldX * 0.82 / spacing);
+        for (int i = -1; i < (width / spacing) + 2; i++) {
+            long absoluteIndex = baseIndex + i;
+            float x = i * spacing - offset + width * 0.18f;
+            Rect source = Math.floorMod(absoluteIndex, 2) == 0 ? coastalSign : speedSign;
+            Bitmap bitmap = Math.floorMod(absoluteIndex, 2) == 0 ? coastalTileset : baseTileset;
+            if (bitmap == null) continue;
+            float height = 62.0f;
+            float objectWidth = height * source.width() / source.height();
+            RectF destination = new RectF(x, horizonY - height + 4.0f,
+                x + objectWidth, horizonY + 4.0f);
+            canvas.drawBitmap(bitmap, source, destination, assetPaint);
         }
         }
 
