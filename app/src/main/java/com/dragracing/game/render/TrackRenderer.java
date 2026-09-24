@@ -32,16 +32,16 @@ public class TrackRenderer {
 
         public String getDisplayName() {
             switch (this) {
-                case TOKYO_NIGHT: return "Tokyo về đêm";
-                case ABANDONED_INDUSTRIAL: return "Khu công nghiệp bỏ hoang";
-                case DESERT_SUNSET: return "Sa mạc lúc hoàng hôn";
-                case HIGHWAY_SUNSET: return "Đại lộ cao tốc lúc hoàng hôn";
-                case COASTAL_DAY: return "Đường đua ven biển ban ngày";
+                case TOKYO_NIGHT: return "Thành phố đêm";
+                case ABANDONED_INDUSTRIAL: return "Khu công nghiệp";
+                case DESERT_SUNSET: return "Sa mạc";
+                case HIGHWAY_SUNSET: return "Đại lộ cao tốc";
+                case COASTAL_DAY: return "Đường đua ven biển";
                 case SNOW_AURORA: return "Núi tuyết và cực quang";
                 case SUBWAY_GRAFFITI: return "Hầm tàu điện graffiti";
-                case FOREST_DAWN: return "Khu rừng lúc bình minh";
-                case FESTIVAL_NIGHT: return "Đường đua lễ hội buổi tối";
-                case PRO_TRACK_DAY: return "Đường đua chuyên dụng ban ngày";
+                case FOREST_DAWN: return "Khu rừng  bình minh";
+                case FESTIVAL_NIGHT: return "Đường đua lễ hội";
+                case PRO_TRACK_DAY: return "Đường đua chuyên dụng";
                 default: return name();
             }
         }
