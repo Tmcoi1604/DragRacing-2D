@@ -1,189 +1,139 @@
-alfa_romeo_4c  512x160 comps=2
-   rear  box x=48..136 y=82..146  halfw=44 depth=39
-         A x=0.180 y=0.791 r=0.087   C y=0.722 r=0.087   (h=160)
-   front box x=349..438 y=84..152  halfw=45 depth=38
-         A x=0.769 y=0.806 r=0.088   C y=0.719 r=0.088   (h=160)
+alfa_romeo_4c  512x160  n=2
+   rear  x=0.180 y=0.791 r=0.087 apex=0.512  (48..136)
+   front x=0.769 y=0.806 r=0.088 apex=0.525  (349..438)
    CUR   rearX=0.354 frontX=0.651 y=0.837 r=0.065
 
-alpine_a110  450x146 comps=4
-   rear  box x=49..129 y=78..136  halfw=40 depth=34
-         A x=0.198 y=0.812 r=0.090   C y=0.723 r=0.090   (h=146)
-   front box x=314..386 y=79..134  halfw=36 depth=34
-         A x=0.778 y=0.791 r=0.081   C y=0.750 r=0.081   (h=146)
+alpine_a110  450x146  n=2
+   rear  x=0.198 y=0.812 r=0.090 apex=0.534  (49..129)
+   front x=0.778 y=0.791 r=0.081 apex=0.541  (314..386)
    CUR   rearX=0.265 frontX=0.713 y=0.814 r=0.065
 
-aston_martin_v8_vantage  407x127 comps=4
-   rear  box x=63..118 y=68..114  halfw=28 depth=30
-         A x=0.222 y=0.756 r=0.069   C y=0.768 r=0.072   (h=127)
-   front box x=292..359 y=68..118  halfw=34 depth=30
-         A x=0.800 y=0.803 r=0.084   C y=0.732 r=0.084   (h=127)
+aston_martin_v8_vantage  407x127  n=2
+   rear  x=0.222 y=0.756 r=0.069 apex=0.535  (63..118)
+   front x=0.800 y=0.803 r=0.084 apex=0.535  (292..359)
    CUR   rearX=0.337 frontX=0.704 y=0.811 r=0.065
 
-audi_r8_v10_plus  871x286 comps=5
-   rear  box x=94..232 y=145..255  halfw=70 depth=70
-         A x=0.187 y=0.750 r=0.080   C y=0.753 r=0.081   (h=286)
-   front box x=581..721 y=146..259  halfw=70 depth=70
-         A x=0.747 y=0.757 r=0.081   C y=0.753 r=0.081   (h=286)
+audi_r8_v10_plus  871x286  n=2
+   rear  x=0.189 y=0.755 r=0.082 apex=0.507  (94..235)
+   front x=0.747 y=0.757 r=0.081 apex=0.510  (581..721)
    CUR   rearX=0.342 frontX=0.665 y=0.818 r=0.065
 
-bmw_m3  535x147 comps=5
-   rear  box x=81..165 y=84..141  halfw=42 depth=32
-         A x=0.230 y=0.861 r=0.079   C y=0.711 r=0.079   (h=147)
-   front box x=383..461 y=84..141  halfw=40 depth=32
-         A x=0.789 y=0.840 r=0.074   C y=0.731 r=0.074   (h=147)
+bmw_m3  535x147  n=2
+   rear  x=0.230 y=0.861 r=0.079 apex=0.571  (81..165)
+   front x=0.789 y=0.840 r=0.074 apex=0.571  (383..461)
    CUR   rearX=0.338 frontX=0.691 y=0.807 r=0.065
 
-bmw_m4  923x270 comps=3
-   rear  box x=132..265 y=169..244  halfw=67 depth=50
-         A x=0.215 y=0.874 r=0.073   C y=0.752 r=0.073   (h=270)
-   front box x=665..814 y=169..247  halfw=75 depth=50
-         A x=0.801 y=0.904 r=0.081   C y=0.722 r=0.081   (h=270)
+bmw_m4  923x270  n=4
+   rear  x=0.215 y=0.874 r=0.073 apex=0.626  (132..265)
+   mid   x=0.369 y=1.065 r=0.044 apex=0.915  (301..381)
+   mid   x=0.579 y=1.378 r=0.135 apex=0.915  (410..659)
+   front x=0.801 y=0.904 r=0.081 apex=0.626  (665..814)
    CUR   rearX=0.347 frontX=0.684 y=0.813 r=0.065
 
-bmw_m4_dtm_champion_edition  505x150 comps=4
-   rear  box x=89..138 y=89..132  halfw=25 depth=30
-         A x=0.225 y=0.760 r=0.050   C y=0.797 r=0.060   (h=150)
-   front box x=358..424 y=89..136  halfw=34 depth=30
-         A x=0.774 y=0.817 r=0.066   C y=0.777 r=0.066   (h=150)
+bmw_m4_dtm_champion_edition  505x150  n=2
+   rear  x=0.207 y=0.820 r=0.067 apex=0.593  (71..138)
+   front x=0.774 y=0.817 r=0.066 apex=0.593  (358..424)
    CUR   rearX=0.261 frontX=0.694 y=0.784 r=0.064
 
-bmw_m6  555x155 comps=4
-   rear  box x=61..165 y=90..144  halfw=52 depth=32
-         A x=0.204 y=0.919 r=0.095   C y=0.661 r=0.095   (h=155)
-   front box x=396..492 y=88..149  halfw=48 depth=34
-         A x=0.800 y=0.881 r=0.087   C y=0.687 r=0.087   (h=155)
+bmw_m6  555x155  n=2
+   rear  x=0.204 y=0.919 r=0.095 apex=0.581  (61..165)
+   front x=0.800 y=0.881 r=0.087 apex=0.568  (396..492)
    CUR   rearX=0.222 frontX=0.720 y=0.790 r=0.064
 
-ferrari_488_gtb  525x150 comps=5
-   rear  box x=50..139 y=73..137  halfw=45 depth=38
-         A x=0.180 y=0.787 r=0.086   C y=0.700 r=0.086   (h=150)
-   front box x=355..442 y=74..142  halfw=44 depth=38
-         A x=0.759 y=0.787 r=0.084   C y=0.707 r=0.084   (h=150)
+ferrari_488_gtb  525x150  n=2
+   rear  x=0.179 y=0.790 r=0.087 apex=0.487  (49..139)
+   front x=0.759 y=0.787 r=0.084 apex=0.493  (355..442)
    CUR   rearX=0.328 frontX=0.672 y=0.817 r=0.064
 
-honda_civic_type_r  467x168 comps=2
-   rear  box x=59..131 y=110..152  halfw=36 depth=29
-         A x=0.203 y=0.872 r=0.078   C y=0.783 r=0.078   (h=168)
-   front box x=328..401 y=110..159  halfw=37 depth=29
-         A x=0.781 y=0.875 r=0.079   C y=0.780 r=0.079   (h=168)
+honda_civic_type_r  467x168  n=2
+   rear  x=0.203 y=0.872 r=0.078 apex=0.655  (59..131)
+   front x=0.781 y=0.875 r=0.079 apex=0.655  (328..401)
    CUR   rearX=0.356 frontX=0.674 y=0.809 r=0.064
 
-honda_nsx  436x126 comps=4
-   rear  box x=46..113 y=62..118  halfw=34 depth=32
-         A x=0.182 y=0.762 r=0.078   C y=0.730 r=0.078   (h=126)
-   front box x=296..374 y=62..120  halfw=40 depth=32
-         A x=0.768 y=0.806 r=0.091   C y=0.687 r=0.091   (h=126)
+honda_nsx  436x126  n=2
+   rear  x=0.180 y=0.770 r=0.080 apex=0.492  (44..113)
+   front x=0.768 y=0.806 r=0.091 apex=0.492  (296..374)
    CUR   rearX=0.254 frontX=0.775 y=0.802 r=0.097
 
-honda_s2000  510x157 comps=2
-   rear  box x=70..143 y=88..144  halfw=37 depth=34
-         A x=0.209 y=0.796 r=0.073   C y=0.764 r=0.073   (h=157)
-   front box x=361..447 y=88..146  halfw=44 depth=34
-         A x=0.792 y=0.838 r=0.085   C y=0.723 r=0.085   (h=157)
+honda_s2000  510x157  n=2
+   rear  x=0.209 y=0.796 r=0.073 apex=0.561  (70..143)
+   front x=0.792 y=0.838 r=0.085 apex=0.561  (361..447)
    CUR   rearX=0.267 frontX=0.684 y=0.830 r=0.065
 
-lamborghini_huracan  482x128 comps=4
-   rear  box x=49..124 y=64..121  halfw=38 depth=32
-         A x=0.179 y=0.797 r=0.079   C y=0.703 r=0.079   (h=128)
-   front box x=332..408 y=66..123  halfw=38 depth=31
-         A x=0.768 y=0.816 r=0.080   C y=0.699 r=0.080   (h=128)
+lamborghini_huracan  482x128  n=2
+   rear  x=0.176 y=0.809 r=0.082 apex=0.500  (46..124)
+   front x=0.768 y=0.816 r=0.080 apex=0.516  (332..408)
    CUR   rearX=0.332 frontX=0.665 y=0.836 r=0.064
 
-lexus_lc500  386x118 comps=4
-   rear  box x=47..110 y=60..105  halfw=32 depth=29
-         A x=0.203 y=0.780 r=0.083   C y=0.729 r=0.083   (h=118)
-   front box x=276..339 y=60..106  halfw=32 depth=29
-         A x=0.797 y=0.780 r=0.083   C y=0.729 r=0.083   (h=118)
+lexus_lc500  386x118  n=2
+   rear  x=0.203 y=0.780 r=0.083 apex=0.508  (47..110)
+   front x=0.797 y=0.780 r=0.083 apex=0.508  (276..339)
    CUR   rearX=0.334 frontX=0.713 y=0.802 r=0.064
 
-lotus_emira  435x121 comps=4
-   rear  box x=43..115 y=61..112  halfw=36 depth=30
-         A x=0.182 y=0.806 r=0.084   C y=0.698 r=0.084   (h=121)
-   front box x=296..372 y=59..114  halfw=38 depth=31
-         A x=0.768 y=0.806 r=0.089   C y=0.682 r=0.089   (h=121)
+lotus_emira  435x121  n=2
+   rear  x=0.182 y=0.806 r=0.084 apex=0.504  (43..115)
+   front x=0.768 y=0.806 r=0.089 apex=0.488  (296..372)
    CUR   rearX=0.230 frontX=0.711 y=0.782 r=0.064
 
-lotus_exige_s  510x160 comps=5
-   rear  box x=61..140 y=89..147  halfw=40 depth=36
-         A x=0.197 y=0.806 r=0.078   C y=0.750 r=0.078   (h=160)
-   front box x=357..443 y=89..151  halfw=44 depth=36
-         A x=0.784 y=0.828 r=0.085   C y=0.728 r=0.085   (h=160)
+lotus_exige_s  510x160  n=3
+   rear  x=0.197 y=0.806 r=0.078 apex=0.556  (61..140)
+   mid   x=0.462 y=1.137 r=0.063 apex=0.938  (204..267)
+   front x=0.784 y=0.828 r=0.085 apex=0.556  (357..443)
    CUR   rearX=0.327 frontX=0.701 y=0.802 r=0.064
 
-mercedes_amg_gt_r  347x106 comps=5
-   rear  box x=64..96 y=59..94  halfw=16 depth=24
-         A x=0.231 y=0.712 r=0.048   C y=0.778 r=0.068   (h=106)
-   front box x=261..296 y=59..105  halfw=18 depth=24
-         A x=0.803 y=0.726 r=0.052   C y=0.778 r=0.068   (h=106)
+mercedes_amg_gt_r  347x106  n=2
+   rear  x=0.205 y=0.797 r=0.073 apex=0.557  (46..96)
+   front x=0.781 y=0.797 r=0.073 apex=0.557  (246..296)
    CUR   rearX=0.334 frontX=0.701 y=0.811 r=0.065
 
-mercedes_amg_gt_s  446x137 comps=5
-   rear  box x=56..137 y=77..128  halfw=41 depth=30
-         A x=0.216 y=0.861 r=0.092   C y=0.701 r=0.092   (h=137)
-   front box x=324..399 y=78..128  halfw=38 depth=30
-         A x=0.811 y=0.847 r=0.085   C y=0.723 r=0.085   (h=137)
+mercedes_amg_gt_s  446x137  n=2
+   rear  x=0.216 y=0.861 r=0.092 apex=0.562  (56..137)
+   front x=0.811 y=0.847 r=0.085 apex=0.569  (324..399)
    CUR   rearX=0.353 frontX=0.687 y=0.844 r=0.064
 
-nissan_gtr_nismo  493x160 comps=5
-   rear  box x=57..142 y=87..149  halfw=43 depth=36
-         A x=0.202 y=0.812 r=0.087   C y=0.731 r=0.087   (h=160)
-   front box x=356..437 y=88..149  halfw=41 depth=36
-         A x=0.804 y=0.806 r=0.083   C y=0.744 r=0.083   (h=160)
+nissan_gtr_nismo  493x160  n=2
+   rear  x=0.202 y=0.812 r=0.087 apex=0.544  (57..142)
+   front x=0.804 y=0.806 r=0.083 apex=0.550  (356..437)
    CUR   rearX=0.269 frontX=0.673 y=0.830 r=0.065
 
-porsche_718_cayman_gt4  413x132 comps=2
-   rear  box x=38..110 y=72..121  halfw=36 depth=30
-         A x=0.179 y=0.822 r=0.088   C y=0.723 r=0.088   (h=132)
-   front box x=270..345 y=72..125  halfw=38 depth=30
-         A x=0.745 y=0.833 r=0.092   C y=0.712 r=0.092   (h=132)
+porsche_718_cayman_gt4  413x132  n=2
+   rear  x=0.179 y=0.822 r=0.088 apex=0.545  (38..110)
+   front x=0.745 y=0.833 r=0.092 apex=0.545  (270..345)
    CUR   rearX=0.239 frontX=0.679 y=0.814 r=0.065
 
-porsche_718_cayman_gts  834x299 comps=2
-   rear  box x=120..292 y=155..274  halfw=86 depth=72
-         A x=0.247 y=0.808 r=0.104   C y=0.711 r=0.104   (h=299)
-   front box x=580..717 y=157..284  halfw=69 depth=71
-         A x=0.778 y=0.756 r=0.083   C y=0.763 r=0.085   (h=299)
+porsche_718_cayman_gts  834x299  n=2
+   rear  x=0.247 y=0.808 r=0.104 apex=0.518  (120..292)
+   front x=0.778 y=0.756 r=0.083 apex=0.525  (580..717)
    CUR   rearX=0.305 frontX=0.688 y=0.803 r=0.080
 
-porsche_718_cayman_s  938x266 comps=2
-   rear  box x=98..259 y=138..247  halfw=81 depth=64
-         A x=0.190 y=0.823 r=0.086   C y=0.695 r=0.086   (h=266)
-   front box x=275..790 y=138..258  halfw=258 depth=64
-         A x=0.568 y=1.489 r=0.275   C y=0.030 r=0.275   (h=266)
+porsche_718_cayman_s  938x266  n=3
+   rear  x=0.190 y=0.823 r=0.086 apex=0.519  (98..259)
+   mid   x=0.571 y=1.502 r=0.279 apex=0.519  (275..797)
+   front x=0.877 y=1.009 r=0.012 apex=0.966  (812..834)
    CUR   rearX=0.354 frontX=0.676 y=0.830 r=0.065
 
-porsche_911_carrera_gts  876x285 comps=5
-   rear  box x=138..261 y=158..264  halfw=62 depth=64
-         A x=0.228 y=0.772 r=0.071   C y=0.777 r=0.072   (h=285)
-   front box x=589..742 y=158..270  halfw=77 depth=64
-         A x=0.760 y=0.825 r=0.088   C y=0.730 r=0.088   (h=285)
+porsche_911_carrera_gts  876x285  n=2
+   rear  x=0.213 y=0.818 r=0.086 apex=0.554  (112..261)
+   front x=0.760 y=0.825 r=0.088 apex=0.554  (589..742)
    CUR   rearX=0.262 frontX=0.673 y=0.833 r=0.048
 
-porsche_911_gt3  642x215 comps=2
-   rear  box x=80..197 y=113..197  halfw=59 depth=51
-         A x=0.216 y=0.800 r=0.092   C y=0.726 r=0.092   (h=215)
-   front box x=215..553 y=114..203  halfw=170 depth=50
-         A x=0.598 y=1.319 r=0.264   C y=0.212 r=0.264   (h=215)
+porsche_911_gt3  642x215  n=2
+   rear  x=0.216 y=0.800 r=0.092 apex=0.526  (80..197)
+   front x=0.598 y=1.319 r=0.264 apex=0.530  (215..553)
    CUR   rearX=0.354 frontX=0.664 y=0.822 r=0.065
 
-toyota_86gt  891x280 comps=4
-   rear  box x=209..246 y=160..236  halfw=19 depth=60
-         A x=0.255 y=0.639 r=0.021   C y=0.786 r=0.067   (h=280)
-   front box x=642..690 y=156..236  halfw=24 depth=62
-         A x=0.747 y=0.645 r=0.027   C y=0.779 r=0.070   (h=280)
+toyota_86gt  891x280  n=2
+   rear  x=0.199 y=0.820 r=0.078 apex=0.571  (108..246)
+   front x=0.797 y=0.804 r=0.077 apex=0.557  (642..779)
    CUR   rearX=0.264 frontX=0.710 y=0.807 r=0.065
 
-toyota_gr86  626x217 comps=4
-   rear  box x=69..179 y=123..205  halfw=56 depth=47
-         A x=0.198 y=0.823 r=0.089   C y=0.744 r=0.089   (h=217)
-   front box x=452..558 y=123..205  halfw=54 depth=47
-         A x=0.807 y=0.813 r=0.085   C y=0.753 r=0.085   (h=217)
+toyota_gr86  626x217  n=2
+   rear  x=0.198 y=0.823 r=0.089 apex=0.567  (69..179)
+   front x=0.807 y=0.813 r=0.085 apex=0.567  (452..558)
    CUR   rearX=0.278 frontX=0.710 y=0.799 r=0.065
 
-toyota_gr_supra_rz  642x213 comps=2
-   rear  box x=79..185 y=120..199  halfw=54 depth=46
-         A x=0.206 y=0.815 r=0.083   C y=0.749 r=0.083   (h=213)
-   front box x=441..547 y=120..205  halfw=54 depth=46
-         A x=0.769 y=0.815 r=0.083   C y=0.749 r=0.083   (h=213)
+toyota_gr_supra_rz  642x213  n=2
+   rear  x=0.206 y=0.815 r=0.083 apex=0.563  (79..185)
+   front x=0.769 y=0.815 r=0.083 apex=0.563  (441..547)
    CUR   rearX=0.316 frontX=0.719 y=0.811 r=0.065
 
