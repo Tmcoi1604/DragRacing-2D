@@ -1,0 +1,35 @@
+import os
+from PIL import Image
+
+DIR = "app/src/main/assets/carsimg"
+names = ["toyota_86gt", "alfa_romeo_4c", "honda_nsx", "porsche_911_carrera_gts",
+         "bmw_m3", "mercedes_amg_gt_s"]
+OUT = open("_cars_ascii.txt", "w")
+
+GW, GH = 96, 28
+
+for n in names:
+    path = os.path.join(DIR, n + "_body.png")
+    im = Image.open(path).convert("RGBA")
+    w, h = im.size
+    px = im.load()
+    OUT.write("=== %s %dx%d\n" % (n, w, h))
+    for gy in range(GH):
+        row = []
+        for gx in range(GW):
+            x0 = int(gx * w / GW)
+            x1 = max(x0 + 1, int((gx + 1) * w / GW))
+            y0 = int(gy * h / GH)
+            y1 = max(y0 + 1, int((gy + 1) * h / GH))
+            opaque = 0
+            total = 0
+            for yy in range(y0, y1):
+                for xx in range(x0, x1):
+                    total += 1
+                    if px[xx, yy][3] > 40:
+                        opaque += 1
+            frac = opaque / float(total) if total else 0
+            row.append("#" if frac > 0.6 else ("+" if frac > 0.2 else "."))
+        OUT.write("".join(row) + "\n")
+
+OUT.close()

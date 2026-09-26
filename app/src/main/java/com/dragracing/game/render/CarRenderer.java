@@ -20,12 +20,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class CarRenderer {
     private final Context context;
-    private final Map<String, Bitmap> carBitmaps = new HashMap<>();
-    private final Map<String, Bitmap> tintedCarBitmaps = new HashMap<>();
+    private final Map<String, Bitmap> bodyBitmaps = new HashMap<>();
+    private final Map<String, Bitmap> tintedBodyBitmaps = new HashMap<>();
+    private final Map<String, Bitmap> tyreBitmaps = new HashMap<>();
 
     private static final Map<String, WheelSpec> WHEEL_SPECS = new HashMap<>();
     private static class WheelSpec {
@@ -163,6 +165,9 @@ public class CarRenderer {
         Car.BodyType bodyType = car.getBodyType();
 
         float rotDeg = (float) Math.toDegrees(physics.getDistance() / 0.32);
+        if (physics.isWheelSpinning()) {
+            rotDeg += (float) ((System.currentTimeMillis() % 10000) * 1.5);
+        }
         if (drawCarImage(canvas, car, x, y, scale, rotDeg, physics.isHasLaunched())) {
             spawnParticles(physics, x, y, scale);
             renderParticles(canvas, 0.016f);
@@ -830,70 +835,140 @@ public class CarRenderer {
         String resourceName = car.getImageResourceName();
         if (context == null || resourceName == null) return false;
 
-        Bitmap bitmap = carBitmaps.get(resourceName);
-        if (bitmap == null) {
-            // 1. Try exact name
-            int resourceId = context.getResources().getIdentifier(
-                    resourceName, "drawable", context.getPackageName());
-            
-            // 2. Try without "car_" prefix
-            if (resourceId == 0 && resourceName.startsWith("car_")) {
-                resourceId = context.getResources().getIdentifier(
-                        resourceName.substring(4), "drawable", context.getPackageName());
-            }
+        String cleanName = resourceName.startsWith("car_") ? resourceName.substring(4) : resourceName;
 
-            // 3. Try normalized name (e.g. car_toyota_86gt -> toyota_86gt or toyota86gt)
-            if (resourceId == 0) {
-                String normalized = normalizeAssetName(resourceName);
-                resourceId = context.getResources().getIdentifier(
-                        normalized, "drawable", context.getPackageName());
+        Bitmap bodyBitmap = bodyBitmaps.get(cleanName);
+        if (bodyBitmap == null) {
+            bodyBitmap = loadBitmapFromAssetsOrDrawable(cleanName + "_body");
+            if (bodyBitmap == null) {
+                bodyBitmap = loadBitmapFromAssetsOrDrawable(resourceName + "_body");
             }
+            if (bodyBitmap == null) {
+                bodyBitmap = loadBitmapFromAssetsOrDrawable(cleanName);
+            }
+            if (bodyBitmap == null) {
+                bodyBitmap = loadBitmapFromAssetsOrDrawable(resourceName);
+            }
+            if (bodyBitmap == null) return false;
+            bodyBitmaps.put(cleanName, bodyBitmap);
+        }
 
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inScaled = false;
-            if (resourceId != 0) {
-                bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
-            } else {
-                bitmap = decodeCarAsset(resourceName, options);
+        Bitmap tyreBitmap = tyreBitmaps.get(cleanName);
+        if (tyreBitmap == null) {
+            tyreBitmap = loadBitmapFromAssetsOrDrawable(cleanName + "_tyre");
+            if (tyreBitmap == null) {
+                tyreBitmap = loadBitmapFromAssetsOrDrawable(resourceName + "_tyre");
             }
-            if (bitmap == null) return false;
-            carBitmaps.put(resourceName, bitmap);
+            if (tyreBitmap != null) {
+                tyreBitmaps.put(cleanName, tyreBitmap);
+            }
         }
 
         float targetWidth = 185.0f * scale;
-        float targetHeight = targetWidth * bitmap.getHeight() / bitmap.getWidth();
+        float targetHeight = targetWidth * bodyBitmap.getHeight() / bodyBitmap.getWidth();
         float top = y + 55.0f * scale - targetHeight;
         RectF destination = new RectF(x, top, x + targetWidth, top + targetHeight);
 
-        String tintedKey = resourceName + ":" + car.getColor();
-        Bitmap tintedBitmap = tintedCarBitmaps.get(tintedKey);
-        if (tintedBitmap == null) {
-            tintedBitmap = createPixelCarBitmap(bitmap, car.getColor());
-            tintedCarBitmaps.put(tintedKey, tintedBitmap);
+        String tintedKey = cleanName + ":" + car.getColor();
+        Bitmap tintedBodyBitmap = tintedBodyBitmaps.get(tintedKey);
+        if (tintedBodyBitmap == null) {
+            tintedBodyBitmap = createPixelCarBitmap(bodyBitmap, car.getColor());
+            tintedBodyBitmaps.put(tintedKey, tintedBodyBitmap);
         }
 
-        imagePaint.setAlpha(255);
-        canvas.drawBitmap(tintedBitmap, null, destination, imagePaint);
-        if (animateWheels) {
-            drawImageWheelMotion(canvas, resourceName, tintedBitmap, x, top, targetWidth, targetHeight, scale, wheelRotation);
+        float rearWheelRelX = 48.0f / 279.0f;
+        float frontWheelRelX = 229.0f / 279.0f;
+        float wheelRelY = 75.0f / 101.0f;
+        float relRadius = 0.065f;
+
+        WheelSpec spec = WHEEL_SPECS.get(cleanName);
+        if (spec == null) {
+            spec = WHEEL_SPECS.get(resourceName);
         }
+        if (spec != null) {
+            rearWheelRelX = spec.rearX;
+            frontWheelRelX = spec.frontX;
+            wheelRelY = spec.centerY;
+            relRadius = spec.radius;
+        }
+
+        float rearWheelX = x + targetWidth * rearWheelRelX;
+        float frontWheelX = x + targetWidth * frontWheelRelX;
+        float wheelY = top + targetHeight * wheelRelY;
+        float radius = Math.max(5.0f, targetWidth * relRadius);
+
+        imagePaint.setAlpha(255);
+
+        // 1. Draw rotating wheel bitmaps behind the body
+        if (tyreBitmap != null) {
+            drawRotatingTyre(canvas, tyreBitmap, rearWheelX, wheelY, radius, wheelRotation);
+            drawRotatingTyre(canvas, tyreBitmap, frontWheelX, wheelY, radius, wheelRotation);
+        } else if (animateWheels) {
+            int spokes = spec != null ? spec.spokes : 5;
+            int rimColor = spec != null ? spec.rimColor : 0xFFBDBDBD;
+            drawAnimatedWheel(canvas, rearWheelX, wheelY, radius, wheelRotation, spokes, rimColor);
+            drawAnimatedWheel(canvas, frontWheelX, wheelY, radius, wheelRotation, spokes, rimColor);
+        }
+
+        // 2. Draw body over the wheels
+        canvas.drawBitmap(tintedBodyBitmap, null, destination, imagePaint);
         return true;
     }
 
-    private Bitmap decodeCarAsset(String resourceName, BitmapFactory.Options options) {
-        String requestedName = resourceName.startsWith("car_")
-                ? resourceName.substring(4) : resourceName;
+    private void drawRotatingTyre(Canvas canvas, Bitmap tyreBitmap, float cx, float cy, float radius, float angleDeg) {
+        if (tyreBitmap == null) return;
+        canvas.save();
+        canvas.rotate(angleDeg, cx, cy);
+        RectF tyreRect = new RectF(cx - radius, cy - radius, cx + radius, cy + radius);
+        imagePaint.setFilterBitmap(true);
+        canvas.drawBitmap(tyreBitmap, null, tyreRect, imagePaint);
+        canvas.restore();
+    }
+
+    private Bitmap loadBitmapFromAssetsOrDrawable(String name) {
+        if (context == null || name == null) return null;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+
+        int resourceId = context.getResources().getIdentifier(name, "drawable", context.getPackageName());
+        if (resourceId != 0) {
+            try {
+                Bitmap b = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
+                if (b != null) return b;
+            } catch (Exception ignored) {}
+        }
+
+        String[] candidatePaths = new String[] {
+            "carsimg/" + name + ".png",
+            name + ".png",
+            "carsimg/" + name,
+            name
+        };
+        for (String path : candidatePaths) {
+            try (InputStream stream = context.getAssets().open(path)) {
+                Bitmap b = BitmapFactory.decodeStream(stream, null, options);
+                if (b != null) return b;
+            } catch (IOException ignored) {}
+        }
+
         try {
-            String wanted = normalizeAssetName(requestedName);
-            for (String assetName : context.getAssets().list("")) {
-                if (!normalizeAssetName(assetName).equals(wanted)) continue;
-                try (InputStream stream = context.getAssets().open(assetName)) {
-                    return BitmapFactory.decodeStream(stream, null, options);
+            String normTarget = normalizeAssetName(name);
+            String[] dirs = new String[] { "carsimg", "" };
+            for (String dir : dirs) {
+                String[] list = context.getAssets().list(dir);
+                if (list == null) continue;
+                for (String item : list) {
+                    if (normalizeAssetName(item).equals(normTarget)) {
+                        String fullPath = dir.isEmpty() ? item : dir + "/" + item;
+                        try (InputStream stream = context.getAssets().open(fullPath)) {
+                            Bitmap b = BitmapFactory.decodeStream(stream, null, options);
+                            if (b != null) return b;
+                        }
+                    }
                 }
             }
-        } catch (IOException ignored) {
-            // The procedural renderer remains available when an optional asset is missing.
-        }
+        } catch (IOException ignored) {}
+
         return null;
     }
 
@@ -901,7 +976,7 @@ public class CarRenderer {
         String withoutExtension = name.replaceFirst("\\.[^.]+$", "");
         String normalized = Normalizer.normalize(withoutExtension, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-        return normalized.toLowerCase(java.util.Locale.ROOT).replaceAll("[^a-z0-9]", "");
+        return normalized.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]", "");
     }
 
     private Bitmap createPixelCarBitmap(Bitmap source, int bodyColor) {
@@ -983,38 +1058,7 @@ public class CarRenderer {
         return Math.max(0, Math.min(255, Math.round(channel)));
     }
 
-    private void drawImageWheelMotion(Canvas canvas, String resourceName, Bitmap bitmap, float x, float top, float width,
-                                      float height, float scale, float angleDeg) {
-        float rearWheelRelX = 48.0f / 279.0f;
-        float frontWheelRelX = 229.0f / 279.0f;
-        float wheelRelY = 75.0f / 101.0f;
-        float relRadius = 0.065f;
-        
-        WheelSpec spec = WHEEL_SPECS.get(resourceName);
-        if (spec == null && resourceName.startsWith("car_")) {
-            spec = WHEEL_SPECS.get(resourceName.substring(4));
-        }
-        if (spec != null) {
-            rearWheelRelX = spec.rearX;
-            frontWheelRelX = spec.frontX;
-            wheelRelY = spec.centerY;
-            relRadius = spec.radius;
-        }
 
-        float rearWheelX = x + width * rearWheelRelX;
-        float frontWheelX = x + width * frontWheelRelX;
-        float wheelY = top + height * wheelRelY;
-        
-        // Slightly larger radius to cover the wheel nicely
-        float radius = Math.max(5.0f, width * relRadius);
-        int spokes = spec != null ? spec.spokes : 5;
-        int rimColor = spec != null ? spec.rimColor : 0xFFBDBDBD;
-
-        canvas.save();
-        drawAnimatedWheel(canvas, rearWheelX, wheelY, radius, angleDeg, spokes, rimColor);
-        drawAnimatedWheel(canvas, frontWheelX, wheelY, radius, angleDeg, spokes, rimColor);
-        canvas.restore();
-    }
 
     private void drawAnimatedWheel(Canvas canvas, float cx, float cy, float radius,
                                    float angleDeg, int spokes, int rimColor) {

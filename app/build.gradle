@@ -9,7 +9,7 @@ android {
 
     sourceSets {
         main {
-            assets.srcDirs 'src/main/res/drawable/CarsPNG'
+            assets.srcDirs = ['src/main/assets', '../carsimg', 'carsimg']
         }
     }
 
