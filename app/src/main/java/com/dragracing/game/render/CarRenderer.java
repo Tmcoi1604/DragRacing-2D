@@ -28,6 +28,7 @@ public class CarRenderer {
     private final Map<String, Bitmap> bodyBitmaps = new HashMap<>();
     private final Map<String, Bitmap> tintedBodyBitmaps = new HashMap<>();
     private final Map<String, Bitmap> tyreBitmaps = new HashMap<>();
+    private final Map<String, Bitmap> originalCarBitmaps = new HashMap<>();
 
     private static final Map<String, WheelSpec> WHEEL_SPECS = new HashMap<>();
     private static class WheelSpec {
@@ -45,33 +46,33 @@ public class CarRenderer {
     }
 
     static {
-        addWheel("alfa_romeo_4c", .354f, .651f, .837f, .065f, 5, 0xFFBDBDBD);
-        addWheel("alpine_a110", .265f, .713f, .814f, .065f, 5, 0xFFB0BEC5);
-        addWheel("aston_martin_v8_vantage", .337f, .704f, .811f, .065f, 10, 0xFF9E9E9E);
-        addWheel("audi_r8_v10_plus", .342f, .665f, .818f, .065f, 10, 0xFFB0BEC5);
-        addWheel("bmw_m3", .338f, .691f, .807f, .065f, 5, 0xFFBDBDBD);
-        addWheel("bmw_m4", .347f, .684f, .813f, .065f, 5, 0xFFBDBDBD);
-        addWheel("bmw_m4_dtm_champion_edition", .261f, .694f, .784f, .064f, 10, 0xFFCFD8DC);
-        addWheel("bmw_m6", .222f, .720f, .790f, .064f, 5, 0xFF9E9E9E);
-        addWheel("ferrari_488_gtb", .328f, .672f, .817f, .064f, 5, 0xFFBDBDBD);
-        addWheel("honda_civic_type_r", .356f, .674f, .809f, .064f, 5, 0xFFCFD8DC);
-        addWheel("honda_nsx", .254f, .775f, .802f, .097f, 5, 0xFFB0BEC5);
-        addWheel("honda_s2000", .267f, .684f, .830f, .065f, 5, 0xFFBDBDBD);
-        addWheel("lamborghini_huracan", .332f, .665f, .836f, .064f, 10, 0xFFCFD8DC);
-        addWheel("lexus_lc500", .334f, .713f, .802f, .064f, 10, 0xFFB0BEC5);
-        addWheel("lotus_emira", .230f, .711f, .782f, .064f, 5, 0xFFBDBDBD);
-        addWheel("lotus_exige_s", .327f, .701f, .802f, .064f, 5, 0xFFB0BEC5);
-        addWheel("mercedes_amg_gt_r", .334f, .701f, .811f, .065f, 10, 0xFFBDBDBD);
-        addWheel("mercedes_amg_gt_s", .353f, .687f, .844f, .064f, 10, 0xFFCFD8DC);
-        addWheel("nissan_gtr_nismo", .269f, .673f, .830f, .065f, 5, 0xFFB0BEC5);
-        addWheel("porsche_718_cayman_gt4", .239f, .679f, .814f, .065f, 10, 0xFFBDBDBD);
-        addWheel("porsche_718_cayman_gts", .305f, .688f, .803f, .080f, 5, 0xFFCFD8DC);
-        addWheel("porsche_718_cayman_s", .354f, .676f, .830f, .065f, 5, 0xFFBDBDBD);
-        addWheel("porsche_911_carrera_gts", .262f, .673f, .833f, .048f, 5, 0xFFCFD8DC);
-        addWheel("porsche_911_gt3", .354f, .664f, .822f, .065f, 10, 0xFFCFD8DC);
-        addWheel("toyota_86gt", .264f, .710f, .807f, .065f, 5, 0xFFBDBDBD);
-        addWheel("toyota_gr86", .278f, .710f, .799f, .065f, 5, 0xFFBDBDBD);
-        addWheel("toyota_gr_supra_rz", .316f, .719f, .811f, .065f, 10, 0xFFCFD8DC);
+        addWheel("alfa_romeo_4c", 0.184f, 0.765f, 0.755f, 0.082f, 5, 0xFFBDBDBD);
+        addWheel("alpine_a110", 0.207f, 0.777f, 0.752f, 0.072f, 5, 0xFFB0BEC5);
+        addWheel("aston_martin_v8_vantage", 0.224f, 0.799f, 0.720f, 0.060f, 10, 0xFF9E9E9E);
+        addWheel("audi_r8_v10_plus", 0.188f, 0.746f, 0.739f, 0.077f, 10, 0xFFB0BEC5);
+        addWheel("bmw_m3", 0.233f, 0.790f, 0.830f, 0.073f, 5, 0xFFBDBDBD);
+        addWheel("bmw_m4", 0.217f, 0.813f, 0.860f, 0.070f, 5, 0xFFBDBDBD);
+        addWheel("bmw_m4_dtm_champion_edition", 0.207f, 0.774f, 0.818f, 0.067f, 10, 0xFFCFD8DC);
+        addWheel("bmw_m6", 0.214f, 0.800f, 0.865f, 0.083f, 5, 0xFF9E9E9E);
+        addWheel("ferrari_488_gtb", 0.179f, 0.760f, 0.767f, 0.081f, 5, 0xFFBDBDBD);
+        addWheel("honda_civic_type_r", 0.203f, 0.781f, 0.874f, 0.079f, 5, 0xFFCFD8DC);
+        addWheel("honda_nsx", 0.181f, 0.768f, 0.742f, 0.075f, 5, 0xFFB0BEC5);
+        addWheel("honda_s2000", 0.208f, 0.790f, 0.755f, 0.062f, 5, 0xFFBDBDBD);
+        addWheel("lamborghini_huracan", 0.177f, 0.768f, 0.787f, 0.082f, 10, 0xFFCFD8DC);
+        addWheel("lexus_lc500", 0.206f, 0.797f, 0.720f, 0.067f, 10, 0xFFB0BEC5);
+        addWheel("lotus_emira", 0.182f, 0.769f, 0.787f, 0.083f, 5, 0xFFBDBDBD);
+        addWheel("lotus_exige_s", 0.197f, 0.778f, 0.792f, 0.082f, 5, 0xFFB0BEC5);
+        addWheel("mercedes_amg_gt_r", 0.205f, 0.780f, 0.795f, 0.073f, 10, 0xFFBDBDBD);
+        addWheel("mercedes_amg_gt_s", 0.224f, 0.812f, 0.795f, 0.082f, 10, 0xFFCFD8DC);
+        addWheel("nissan_gtr_nismo", 0.204f, 0.802f, 0.763f, 0.084f, 5, 0xFFB0BEC5);
+        addWheel("porsche_718_cayman_gt4", 0.185f, 0.746f, 0.771f, 0.074f, 10, 0xFFBDBDBD);
+        addWheel("porsche_718_cayman_gts", 0.254f, 0.779f, 0.730f, 0.082f, 5, 0xFFCFD8DC);
+        addWheel("porsche_718_cayman_s", 0.197f, 0.770f, 0.777f, 0.082f, 5, 0xFFBDBDBD);
+        addWheel("porsche_911_carrera_gts", 0.224f, 0.762f, 0.750f, 0.065f, 5, 0xFFCFD8DC);
+        addWheel("porsche_911_gt3", 0.219f, 0.774f, 0.778f, 0.085f, 10, 0xFFCFD8DC);
+        addWheel("toyota_86gt", 0.205f, 0.792f, 0.782f, 0.072f, 5, 0xFFBDBDBD);
+        addWheel("toyota_gr86", 0.198f, 0.804f, 0.806f, 0.085f, 5, 0xFFBDBDBD);
+        addWheel("toyota_gr_supra_rz", 0.209f, 0.771f, 0.758f, 0.066f, 10, 0xFFCFD8DC);
     }
 
     private static void addWheel(String id, float rearX, float frontX, float centerY,
@@ -155,6 +156,19 @@ public class CarRenderer {
     // =========================================================================
     // Public entry point
     // =========================================================================
+    public void renderPreview(Canvas canvas, Car car, float x, float y, float scale) {
+        if (car == null) return;
+        if (drawOriginalCarImage(canvas, car, x, y, scale)) {
+            return;
+        }
+        int baseColor = car.getColor();
+        Car.BodyType bodyType = car.getBodyType();
+        float bodyH = 55 * scale;
+        float sw = getShadowWidth(car.getId(), bodyType, scale);
+        canvas.drawOval(x - 4 * scale, y + bodyH, x + sw, y + bodyH + 8 * scale, shadowPaint);
+        drawGenericCar(canvas, x, y, scale, baseColor, 0);
+    }
+
     public void render(Canvas canvas, CarPhysics physics, float x, float y,
                        float scale, boolean isOpponent) {
         if (physics == null) return;
@@ -913,6 +927,55 @@ public class CarRenderer {
         // 2. Draw body over the wheels
         canvas.drawBitmap(tintedBodyBitmap, null, destination, imagePaint);
         return true;
+    }
+
+    public boolean drawOriginalCarImage(Canvas canvas, Car car, float x, float y, float scale) {
+        String resourceName = car.getImageResourceName();
+        if (context == null || resourceName == null) return false;
+
+        String cleanName = resourceName.startsWith("car_") ? resourceName.substring(4) : resourceName;
+
+        Bitmap originalBitmap = originalCarBitmaps.get(cleanName);
+        if (originalBitmap == null) {
+            originalBitmap = loadBitmapFromDrawable(cleanName);
+            if (originalBitmap == null) {
+                originalBitmap = loadBitmapFromDrawable(resourceName);
+            }
+            if (originalBitmap == null) {
+                originalBitmap = loadBitmapFromAssetsOrDrawable(cleanName);
+            }
+            if (originalBitmap == null) return false;
+            originalCarBitmaps.put(cleanName, originalBitmap);
+        }
+
+        float targetWidth = 185.0f * scale;
+        float targetHeight = targetWidth * originalBitmap.getHeight() / originalBitmap.getWidth();
+        float top = y + 55.0f * scale - targetHeight;
+        RectF destination = new RectF(x, top, x + targetWidth, top + targetHeight);
+
+        String tintedKey = "orig:" + cleanName + ":" + car.getColor();
+        Bitmap tintedBitmap = tintedBodyBitmaps.get(tintedKey);
+        if (tintedBitmap == null) {
+            tintedBitmap = createPixelCarBitmap(originalBitmap, car.getColor());
+            tintedBodyBitmaps.put(tintedKey, tintedBitmap);
+        }
+
+        imagePaint.setAlpha(255);
+        canvas.drawBitmap(tintedBitmap, null, destination, imagePaint);
+        return true;
+    }
+
+    private Bitmap loadBitmapFromDrawable(String name) {
+        if (context == null || name == null) return null;
+        int resourceId = context.getResources().getIdentifier(name, "drawable", context.getPackageName());
+        if (resourceId != 0) {
+            try {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inScaled = false;
+                return BitmapFactory.decodeResource(context.getResources(), resourceId, options);
+            } catch (Exception ignored) {}
+        }
+        return null;
     }
 
     private void drawRotatingTyre(Canvas canvas, Bitmap tyreBitmap, float cx, float cy, float radius, float angleDeg) {

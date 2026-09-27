@@ -50,6 +50,6 @@ public class CarPreviewView extends View {
 
         canvas.drawOval(carX - 4.0f * scale, carY + 55.0f * scale,
             carX + 185.0f * scale, carY + 61.0f * scale, groundPaint);
-        renderer.render(canvas, physics, carX, carY, scale, false);
+        renderer.renderPreview(canvas, physics.getCar(), carX, carY, scale);
     }
 }

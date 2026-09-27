@@ -2,46 +2,16 @@ import os
 from PIL import Image
 
 DIR = "app/src/main/assets/carsimg"
-
-CUR = {
-    "alfa_romeo_4c": (0.354, 0.651, 0.837, 0.065),
-    "alpine_a110": (0.265, 0.713, 0.814, 0.065),
-    "aston_martin_v8_vantage": (0.337, 0.704, 0.811, 0.065),
-    "audi_r8_v10_plus": (0.342, 0.665, 0.818, 0.065),
-    "bmw_m3": (0.338, 0.691, 0.807, 0.065),
-    "bmw_m4": (0.347, 0.684, 0.813, 0.065),
-    "bmw_m4_dtm_champion_edition": (0.261, 0.694, 0.784, 0.064),
-    "bmw_m6": (0.222, 0.720, 0.790, 0.064),
-    "ferrari_488_gtb": (0.328, 0.672, 0.817, 0.064),
-    "honda_civic_type_r": (0.356, 0.674, 0.809, 0.064),
-    "honda_nsx": (0.254, 0.775, 0.802, 0.097),
-    "honda_s2000": (0.267, 0.684, 0.830, 0.065),
-    "lamborghini_huracan": (0.332, 0.665, 0.836, 0.064),
-    "lexus_lc500": (0.334, 0.713, 0.802, 0.064),
-    "lotus_emira": (0.230, 0.711, 0.782, 0.064),
-    "lotus_exige_s": (0.327, 0.701, 0.802, 0.064),
-    "mercedes_amg_gt_r": (0.334, 0.701, 0.811, 0.065),
-    "mercedes_amg_gt_s": (0.353, 0.687, 0.844, 0.064),
-    "nissan_gtr_nismo": (0.269, 0.673, 0.830, 0.065),
-    "porsche_718_cayman_gt4": (0.239, 0.679, 0.814, 0.065),
-    "porsche_718_cayman_gts": (0.305, 0.688, 0.803, 0.080),
-    "porsche_718_cayman_s": (0.354, 0.676, 0.830, 0.065),
-    "porsche_911_carrera_gts": (0.262, 0.673, 0.833, 0.048),
-    "porsche_911_gt3": (0.354, 0.664, 0.822, 0.065),
-    "toyota_86gt": (0.264, 0.710, 0.807, 0.065),
-    "toyota_gr86": (0.278, 0.710, 0.799, 0.065),
-    "toyota_gr_supra_rz": (0.316, 0.719, 0.811, 0.065),
-}
-
-OUT = open("wheels_fit.txt", "w")
+OUT_FILE = "wheels_fit.txt"
 
 
-def fit(path):
+def analyze_wheels(path):
     im = Image.open(path).convert("RGBA")
     w, h = im.size
     px = im.load()
+
     op = [[px[x, y][3] > 40 for x in range(w)] for y in range(h)]
-    ystart = int(0.20 * h)
+    ystart = int(0.40 * h)
 
     interior = [[False] * w for _ in range(h)]
     for y in range(ystart, h):
@@ -60,63 +30,72 @@ def fit(path):
                 x += 1
 
     coltop = [-1] * w
-    colbot = [-1] * w
     for x in range(w):
-        best = None
-        runstart = -1
         for y in range(ystart, h):
             if interior[y][x]:
-                if runstart < 0:
-                    runstart = y
-            elif runstart >= 0:
-                best = (runstart, y - 1)
-                runstart = -1
-        if runstart >= 0:
-            best = (runstart, h - 1)
-        if best is not None:
-            coltop[x] = best[0]
-            colbot[x] = best[1]
+                coltop[x] = y
+                break
 
-    apexThresh = int(0.42 * h)
-    isArch = [coltop[x] >= apexThresh for x in range(w)]
+    bot_opaque = [-1] * w
+    for x in range(w):
+        for y in range(h - 1, -1, -1):
+            if op[y][x]:
+                bot_opaque[x] = y
+                break
 
-    ranges = []
-    x = 0
-    while x < w:
-        if isArch[x]:
-            xs = x
-            while x < w and isArch[x]:
-                x += 1
-            ranges.append((xs, x - 1))
+    def fit_arch_in_window(x0_frac, x1_frac):
+        x0 = int(x0_frac * w)
+        x1 = int(x1_frac * w)
+
+        cols = [x for x in range(x0, x1) if coltop[x] >= ystart]
+        if not cols:
+            window_bots = [(x, bot_opaque[x]) for x in range(x0, x1) if bot_opaque[x] > 0]
+            if not window_bots:
+                return None
+            min_y = min(b for _, b in window_bots)
+            cols = [x for x, b in window_bots if b <= min_y + int(0.15 * h) and b <= int(0.85 * h)]
+            if not cols:
+                return None
+            xs, xe = min(cols), max(cols)
+            apex_y = min_y
         else:
-            x += 1
-    return w, h, ranges, coltop
+            min_y = min(coltop[x] for x in cols)
+            arch_cols = [x for x in cols if coltop[x] <= min_y + int(0.20 * h)]
+            xs, xe = min(arch_cols), max(arch_cols)
+            apex_y = min_y
 
-
-for name in sorted(CUR):
-    path = os.path.join(DIR, name + "_body.png")
-    if not os.path.exists(path):
-        OUT.write("%s  MISSING\n" % name)
-        continue
-    w, h, ranges, coltop = fit(path)
-    aspect = w / float(h)
-    res = []
-    for (xs, xe) in ranges:
         width = xe - xs + 1
-        if width < 0.02 * w:
-            continue
         cx = (xs + xe) / 2.0 / w
-        half = width / 2.0 / w
-        apex = min(coltop[x] for x in range(xs, xe + 1) if coltop[x] >= 0) / float(h)
-        cy = apex + half * aspect
-        res.append((cx, cy, half, apex, xs, xe))
-    r, f, cyc, rad = CUR[name]
-    line = "%s  %dx%d  n=%d\n" % (name, w, h, len(res))
-    for i, (cx, ccy, half, apex, xs, xe) in enumerate(res):
-        tag = "rear" if i == 0 else ("front" if i == len(res) - 1 else "mid")
-        line += "   %-5s x=%.3f y=%.3f r=%.3f apex=%.3f  (%d..%d)\n" % (
-            tag, cx, ccy, half, apex, xs, xe)
-    line += "   CUR   rearX=%.3f frontX=%.3f y=%.3f r=%.3f\n" % (r, f, cyc, rad)
-    OUT.write(line + "\n")
+        r_w = (width / 2.0) / w
+        apex = apex_y / float(h)
+        cy = apex + r_w * (w / float(h))
+        return cx, cy, r_w, apex, xs, xe
 
-OUT.close()
+    rear = fit_arch_in_window(0.10, 0.38)
+    front = fit_arch_in_window(0.62, 0.90)
+    return w, h, rear, front
+
+
+def main():
+    out_lines = []
+    files = sorted([f for f in os.listdir(DIR) if f.endswith("_body.png")])
+    for f in files:
+        name = f.replace("_body.png", "")
+        body_path = os.path.join(DIR, f)
+        w, h, rear, front = analyze_wheels(body_path)
+        if rear and front:
+            rx, fx = rear[0], front[0]
+            cy = (rear[1] + front[1]) / 2.0
+            rad = (rear[2] + front[2]) / 2.0
+            line = "%-30s w=%d h=%d rearX=%.3f frontX=%.3f centerY=%.3f radius=%.3f\n" % (
+                name, w, h, rx, fx, cy, rad
+            )
+            out_lines.append(line)
+
+    with open(OUT_FILE, "w") as out:
+        out.writelines(out_lines)
+    print("Done fitting wheels to %s" % OUT_FILE)
+
+
+if __name__ == "__main__":
+    main()

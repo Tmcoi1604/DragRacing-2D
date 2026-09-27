@@ -1,139 +1,27 @@
-alfa_romeo_4c  512x160  n=2
-   rear  x=0.180 y=0.791 r=0.087 apex=0.512  (48..136)
-   front x=0.769 y=0.806 r=0.088 apex=0.525  (349..438)
-   CUR   rearX=0.354 frontX=0.651 y=0.837 r=0.065
-
-alpine_a110  450x146  n=2
-   rear  x=0.198 y=0.812 r=0.090 apex=0.534  (49..129)
-   front x=0.778 y=0.791 r=0.081 apex=0.541  (314..386)
-   CUR   rearX=0.265 frontX=0.713 y=0.814 r=0.065
-
-aston_martin_v8_vantage  407x127  n=2
-   rear  x=0.222 y=0.756 r=0.069 apex=0.535  (63..118)
-   front x=0.800 y=0.803 r=0.084 apex=0.535  (292..359)
-   CUR   rearX=0.337 frontX=0.704 y=0.811 r=0.065
-
-audi_r8_v10_plus  871x286  n=2
-   rear  x=0.189 y=0.755 r=0.082 apex=0.507  (94..235)
-   front x=0.747 y=0.757 r=0.081 apex=0.510  (581..721)
-   CUR   rearX=0.342 frontX=0.665 y=0.818 r=0.065
-
-bmw_m3  535x147  n=2
-   rear  x=0.230 y=0.861 r=0.079 apex=0.571  (81..165)
-   front x=0.789 y=0.840 r=0.074 apex=0.571  (383..461)
-   CUR   rearX=0.338 frontX=0.691 y=0.807 r=0.065
-
-bmw_m4  923x270  n=4
-   rear  x=0.215 y=0.874 r=0.073 apex=0.626  (132..265)
-   mid   x=0.369 y=1.065 r=0.044 apex=0.915  (301..381)
-   mid   x=0.579 y=1.378 r=0.135 apex=0.915  (410..659)
-   front x=0.801 y=0.904 r=0.081 apex=0.626  (665..814)
-   CUR   rearX=0.347 frontX=0.684 y=0.813 r=0.065
-
-bmw_m4_dtm_champion_edition  505x150  n=2
-   rear  x=0.207 y=0.820 r=0.067 apex=0.593  (71..138)
-   front x=0.774 y=0.817 r=0.066 apex=0.593  (358..424)
-   CUR   rearX=0.261 frontX=0.694 y=0.784 r=0.064
-
-bmw_m6  555x155  n=2
-   rear  x=0.204 y=0.919 r=0.095 apex=0.581  (61..165)
-   front x=0.800 y=0.881 r=0.087 apex=0.568  (396..492)
-   CUR   rearX=0.222 frontX=0.720 y=0.790 r=0.064
-
-ferrari_488_gtb  525x150  n=2
-   rear  x=0.179 y=0.790 r=0.087 apex=0.487  (49..139)
-   front x=0.759 y=0.787 r=0.084 apex=0.493  (355..442)
-   CUR   rearX=0.328 frontX=0.672 y=0.817 r=0.064
-
-honda_civic_type_r  467x168  n=2
-   rear  x=0.203 y=0.872 r=0.078 apex=0.655  (59..131)
-   front x=0.781 y=0.875 r=0.079 apex=0.655  (328..401)
-   CUR   rearX=0.356 frontX=0.674 y=0.809 r=0.064
-
-honda_nsx  436x126  n=2
-   rear  x=0.180 y=0.770 r=0.080 apex=0.492  (44..113)
-   front x=0.768 y=0.806 r=0.091 apex=0.492  (296..374)
-   CUR   rearX=0.254 frontX=0.775 y=0.802 r=0.097
-
-honda_s2000  510x157  n=2
-   rear  x=0.209 y=0.796 r=0.073 apex=0.561  (70..143)
-   front x=0.792 y=0.838 r=0.085 apex=0.561  (361..447)
-   CUR   rearX=0.267 frontX=0.684 y=0.830 r=0.065
-
-lamborghini_huracan  482x128  n=2
-   rear  x=0.176 y=0.809 r=0.082 apex=0.500  (46..124)
-   front x=0.768 y=0.816 r=0.080 apex=0.516  (332..408)
-   CUR   rearX=0.332 frontX=0.665 y=0.836 r=0.064
-
-lexus_lc500  386x118  n=2
-   rear  x=0.203 y=0.780 r=0.083 apex=0.508  (47..110)
-   front x=0.797 y=0.780 r=0.083 apex=0.508  (276..339)
-   CUR   rearX=0.334 frontX=0.713 y=0.802 r=0.064
-
-lotus_emira  435x121  n=2
-   rear  x=0.182 y=0.806 r=0.084 apex=0.504  (43..115)
-   front x=0.768 y=0.806 r=0.089 apex=0.488  (296..372)
-   CUR   rearX=0.230 frontX=0.711 y=0.782 r=0.064
-
-lotus_exige_s  510x160  n=3
-   rear  x=0.197 y=0.806 r=0.078 apex=0.556  (61..140)
-   mid   x=0.462 y=1.137 r=0.063 apex=0.938  (204..267)
-   front x=0.784 y=0.828 r=0.085 apex=0.556  (357..443)
-   CUR   rearX=0.327 frontX=0.701 y=0.802 r=0.064
-
-mercedes_amg_gt_r  347x106  n=2
-   rear  x=0.205 y=0.797 r=0.073 apex=0.557  (46..96)
-   front x=0.781 y=0.797 r=0.073 apex=0.557  (246..296)
-   CUR   rearX=0.334 frontX=0.701 y=0.811 r=0.065
-
-mercedes_amg_gt_s  446x137  n=2
-   rear  x=0.216 y=0.861 r=0.092 apex=0.562  (56..137)
-   front x=0.811 y=0.847 r=0.085 apex=0.569  (324..399)
-   CUR   rearX=0.353 frontX=0.687 y=0.844 r=0.064
-
-nissan_gtr_nismo  493x160  n=2
-   rear  x=0.202 y=0.812 r=0.087 apex=0.544  (57..142)
-   front x=0.804 y=0.806 r=0.083 apex=0.550  (356..437)
-   CUR   rearX=0.269 frontX=0.673 y=0.830 r=0.065
-
-porsche_718_cayman_gt4  413x132  n=2
-   rear  x=0.179 y=0.822 r=0.088 apex=0.545  (38..110)
-   front x=0.745 y=0.833 r=0.092 apex=0.545  (270..345)
-   CUR   rearX=0.239 frontX=0.679 y=0.814 r=0.065
-
-porsche_718_cayman_gts  834x299  n=2
-   rear  x=0.247 y=0.808 r=0.104 apex=0.518  (120..292)
-   front x=0.778 y=0.756 r=0.083 apex=0.525  (580..717)
-   CUR   rearX=0.305 frontX=0.688 y=0.803 r=0.080
-
-porsche_718_cayman_s  938x266  n=3
-   rear  x=0.190 y=0.823 r=0.086 apex=0.519  (98..259)
-   mid   x=0.571 y=1.502 r=0.279 apex=0.519  (275..797)
-   front x=0.877 y=1.009 r=0.012 apex=0.966  (812..834)
-   CUR   rearX=0.354 frontX=0.676 y=0.830 r=0.065
-
-porsche_911_carrera_gts  876x285  n=2
-   rear  x=0.213 y=0.818 r=0.086 apex=0.554  (112..261)
-   front x=0.760 y=0.825 r=0.088 apex=0.554  (589..742)
-   CUR   rearX=0.262 frontX=0.673 y=0.833 r=0.048
-
-porsche_911_gt3  642x215  n=2
-   rear  x=0.216 y=0.800 r=0.092 apex=0.526  (80..197)
-   front x=0.598 y=1.319 r=0.264 apex=0.530  (215..553)
-   CUR   rearX=0.354 frontX=0.664 y=0.822 r=0.065
-
-toyota_86gt  891x280  n=2
-   rear  x=0.199 y=0.820 r=0.078 apex=0.571  (108..246)
-   front x=0.797 y=0.804 r=0.077 apex=0.557  (642..779)
-   CUR   rearX=0.264 frontX=0.710 y=0.807 r=0.065
-
-toyota_gr86  626x217  n=2
-   rear  x=0.198 y=0.823 r=0.089 apex=0.567  (69..179)
-   front x=0.807 y=0.813 r=0.085 apex=0.567  (452..558)
-   CUR   rearX=0.278 frontX=0.710 y=0.799 r=0.065
-
-toyota_gr_supra_rz  642x213  n=2
-   rear  x=0.206 y=0.815 r=0.083 apex=0.563  (79..185)
-   front x=0.769 y=0.815 r=0.083 apex=0.563  (441..547)
-   CUR   rearX=0.316 frontX=0.719 y=0.811 r=0.065
-
+alfa_romeo_4c                  w=512 h=160 rearX=0.184 frontX=0.765 centerY=0.755 radius=0.082
+alpine_a110                    w=450 h=146 rearX=0.207 frontX=0.777 centerY=0.752 radius=0.072
+aston_martin_v8_vantage        w=407 h=127 rearX=0.224 frontX=0.799 centerY=0.720 radius=0.060
+audi_r8_v10_plus               w=871 h=286 rearX=0.188 frontX=0.746 centerY=0.739 radius=0.077
+bmw_m3                         w=535 h=147 rearX=0.233 frontX=0.790 centerY=0.830 radius=0.073
+bmw_m4                         w=923 h=270 rearX=0.217 frontX=0.813 centerY=0.860 radius=0.070
+bmw_m4_dtm_champion_edition    w=505 h=150 rearX=0.207 frontX=0.774 centerY=0.818 radius=0.067
+bmw_m6                         w=555 h=155 rearX=0.214 frontX=0.800 centerY=0.865 radius=0.083
+ferrari_488_gtb                w=525 h=150 rearX=0.179 frontX=0.760 centerY=0.767 radius=0.081
+honda_civic_type_r             w=467 h=168 rearX=0.203 frontX=0.781 centerY=0.874 radius=0.079
+honda_nsx                      w=436 h=126 rearX=0.181 frontX=0.768 centerY=0.742 radius=0.075
+honda_s2000                    w=510 h=157 rearX=0.208 frontX=0.790 centerY=0.755 radius=0.062
+lamborghini_huracan            w=482 h=128 rearX=0.177 frontX=0.768 centerY=0.787 radius=0.082
+lexus_lc500                    w=386 h=118 rearX=0.206 frontX=0.797 centerY=0.720 radius=0.067
+lotus_emira                    w=435 h=121 rearX=0.182 frontX=0.769 centerY=0.787 radius=0.083
+lotus_exige_s                  w=510 h=160 rearX=0.197 frontX=0.778 centerY=0.792 radius=0.082
+mercedes_amg_gt_r              w=347 h=106 rearX=0.205 frontX=0.780 centerY=0.795 radius=0.073
+mercedes_amg_gt_s              w=446 h=137 rearX=0.224 frontX=0.812 centerY=0.795 radius=0.082
+nissan_gtr_nismo               w=493 h=160 rearX=0.204 frontX=0.802 centerY=0.763 radius=0.084
+porsche_718_cayman_gt4         w=413 h=132 rearX=0.185 frontX=0.746 centerY=0.771 radius=0.074
+porsche_718_cayman_gts         w=834 h=299 rearX=0.254 frontX=0.779 centerY=0.730 radius=0.082
+porsche_718_cayman_s           w=938 h=266 rearX=0.197 frontX=0.770 centerY=0.777 radius=0.082
+porsche_911_carrera_gts        w=876 h=285 rearX=0.224 frontX=0.762 centerY=0.750 radius=0.065
+porsche_911_gt3                w=642 h=215 rearX=0.219 frontX=0.774 centerY=0.778 radius=0.085
+toyota_86gt                    w=891 h=280 rearX=0.205 frontX=0.792 centerY=0.782 radius=0.072
+toyota_gr86                    w=626 h=217 rearX=0.198 frontX=0.804 centerY=0.806 radius=0.085
+toyota_gr_supra_rz             w=642 h=213 rearX=0.209 frontX=0.771 centerY=0.758 radius=0.066
