@@ -45,10 +45,10 @@ public class MainActivity extends AppCompatActivity {
     };
         private final String[] difficulties = {"Dễ", "Thường", "Khó", "Rất Khó"};
             private final String[] environments = new String[]{
-                "Tokyo về đêm", "Khu công nghiệp bỏ hoang", "Sa mạc lúc hoàng hôn",
-                "Đại lộ cao tốc lúc hoàng hôn", "Đường đua ven biển ban ngày",
-                "Núi tuyết và cực quang", "Hầm tàu điện graffiti", "Khu rừng lúc bình minh",
-                "Đường đua lễ hội buổi tối", "Đường đua chuyên dụng ban ngày"
+                "Thành phố đêm", "Khu công nghiệp", "Sa mạc",
+                "Đại lộ cao tốc", "Đường đua ven biển",
+                "Núi tuyết và cực quang", "Hầm tàu điện graffiti", "Khu rừng",
+                "Đường đua lễ hội", "Đường đua chuyên dụng"
             };
 
     @Override
