@@ -3,14 +3,25 @@
     android:layout_width="480dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/bg_card"
-    android:padding="16dp">
+    android:background="@drawable/bg_result_dialog"
+    android:elevation="12dp"
+    android:padding="18dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="RACE SUMMARY"
+        android:textColor="#A6E7FD"
+        android:textSize="11sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvResultTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
         android:text="CHIẾN THẮNG!"
         android:textColor="@color/accent"
         android:textSize="24sp"
@@ -22,6 +33,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="2dp"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@drawable/bg_result_section"
         android:text="+$1,200"
         android:textColor="@color/green_zone"
         android:textSize="20sp"
@@ -32,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@color/bg_card_secondary"
+        android:background="@drawable/bg_result_section"
         android:orientation="vertical"
         android:padding="10dp">
 
@@ -126,7 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:background="@color/bg_card_secondary"
+        android:background="@drawable/bg_result_section"
         android:orientation="vertical"
         android:padding="10dp">
 
