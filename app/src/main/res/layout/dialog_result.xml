@@ -2,277 +2,324 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="480dp"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:background="@drawable/bg_result_dialog"
     android:elevation="12dp"
-    android:padding="18dp">
+    android:padding="12dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="RACE SUMMARY"
-        android:textColor="#A6E7FD"
-        android:textSize="11sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/tvResultTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-        android:text="CHIẾN THẮNG!"
-        android:textColor="@color/accent"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/tvPrizeCash"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="2dp"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:background="@drawable/bg_result_section"
-        android:text="+$1,200"
-        android:textColor="@color/green_zone"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <LinearLayout
-        android:id="@+id/rewardBreakdown"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bg_result_section"
-        android:orientation="vertical"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CHI TIẾT TIỀN THƯỞNG"
-            android:textColor="@color/accent"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="320dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
+
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Thưởng độ khó / quãng đường"
-                android:textColor="@color/text_gray"
-                android:textSize="12sp" />
-            <TextView
-                android:id="@+id/tvBasePrize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_white"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Launch"
-                android:textColor="@color/text_gray"
-                android:textSize="12sp" />
-            <TextView
-                android:id="@+id/tvLaunchBonus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_white"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Good / Perfect shift"
-                android:textColor="@color/text_gray"
-                android:textSize="12sp" />
-            <TextView
-                android:id="@+id/tvShiftBonus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_white"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Vượt xe"
-                android:textColor="@color/text_gray"
-                android:textSize="12sp" />
-            <TextView
-                android:id="@+id/tvOvertakeBonus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_white"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/statsContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/bg_result_section"
-        android:orientation="vertical"
-        android:padding="10dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Thời gian 1/4 dặm (ET):"
-                android:textColor="@color/text_gray"
-                android:textSize="14sp" />
-            <TextView
-                android:id="@+id/tvPlayerET"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="11.234 s"
-                android:textColor="@color/text_white"
-                android:textSize="14sp"
+                android:layout_gravity="center_horizontal"
+                android:text="RACE SUMMARY"
+                android:textColor="#A6E7FD"
+                android:textSize="11sp"
                 android:textStyle="bold" />
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal">
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Đối thủ (ET):"
-                android:textColor="@color/text_gray"
-                android:textSize="14sp" />
-            <TextView
-                android:id="@+id/tvOpponentET"
+                android:id="@+id/tvResultTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="11.890 s"
-                android:textColor="@color/text_white"
-                android:textSize="14sp" />
-        </LinearLayout>
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:text="CHIẾN THẮNG!"
+                android:textColor="@color/accent"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal">
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Tốc độ cán đích:"
-                android:textColor="@color/text_gray"
-                android:textSize="14sp" />
-            <TextView
-                android:id="@+id/tvTopSpeed"
+                android:id="@+id/tvPrizeCash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="210 km/h"
-                android:textColor="@color/text_white"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Số lần sang số hoàn hảo:"
-                android:textColor="@color/text_gray"
-                android:textSize="14sp" />
-            <TextView
-                android:id="@+id/tvPerfectShifts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="3"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="2dp"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@drawable/bg_result_section"
+                android:text="+$1,200"
                 android:textColor="@color/green_zone"
-                android:textSize="14sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
-        </LinearLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/rewardBreakdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_result_section"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CHI TIẾT TIỀN THƯỞNG"
+                    android:textColor="@color/accent"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Thưởng độ khó / quãng đường"
+                        android:textColor="@color/text_gray"
+                        android:textSize="11sp" />
+                    <TextView
+                        android:id="@+id/tvBasePrize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_white"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Launch"
+                        android:textColor="@color/text_gray"
+                        android:textSize="11sp" />
+                    <TextView
+                        android:id="@+id/tvLaunchBonus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_white"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Good / Perfect shift"
+                        android:textColor="@color/text_gray"
+                        android:textSize="11sp" />
+                    <TextView
+                        android:id="@+id/tvShiftBonus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_white"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Vượt xe"
+                        android:textColor="@color/text_gray"
+                        android:textSize="11sp" />
+                    <TextView
+                        android:id="@+id/tvOvertakeBonus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_white"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/statsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_result_section"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Thời gian 1/4 dặm (ET):"
+                        android:textColor="@color/text_gray"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/tvPlayerET"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="11.234 s"
+                        android:textColor="@color/text_white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Đối thủ (ET):"
+                        android:textColor="@color/text_gray"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/tvOpponentET"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="11.890 s"
+                        android:textColor="@color/text_white"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Tốc độ cán đích:"
+                        android:textColor="@color/text_gray"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/tvTopSpeed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="210 km/h"
+                        android:textColor="@color/text_white"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Số lần sang số hoàn hảo:"
+                        android:textColor="@color/text_gray"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/tvPerfectShifts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3"
+                        android:textColor="@color/green_zone"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
+        android:layout_width="76dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnRematch"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginEnd="6dp"
-            android:backgroundTint="@color/primary"
-            android:text="ĐUA LẠI"
-            android:textSize="12sp"
-            android:textColor="@color/text_white" />
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/btnContinue"
+                android:layout_width="68dp"
+                android:layout_height="38dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="Tiếp tục"
+                android:padding="0dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/next_button" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TIẾP TỤC"
+                android:textColor="@color/text_white"
+                android:textSize="9sp" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/btnGarage"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginStart="3dp"
-            android:layout_marginEnd="3dp"
-            android:backgroundTint="@color/bg_card_secondary"
-            android:text="GARAGE"
-            android:textSize="12sp"
-            android:textColor="@color/text_white" />
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/btnRematch"
+                android:layout_width="68dp"
+                android:layout_height="38dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="Đua lại"
+                android:padding="0dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/replay_button" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ĐUA LẠI"
+                android:textColor="@color/text_white"
+                android:textSize="9sp" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/btnContinue"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginStart="6dp"
-            android:backgroundTint="@color/green_zone"
-            android:text="TIẾP TỤC"
-            android:textSize="12sp"
-            android:textColor="#000000" />
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/btnGarage"
+                android:layout_width="68dp"
+                android:layout_height="38dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="Garage"
+                android:padding="0dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/garage_button" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GARAGE"
+                android:textColor="@color/text_white"
+                android:textSize="9sp" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

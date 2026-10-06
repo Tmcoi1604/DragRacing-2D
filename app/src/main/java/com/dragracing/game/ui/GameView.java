@@ -91,8 +91,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
     private void loadHudAssets() {
         shiftUpBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.shift_up);
         shiftDownBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.shift_down);
-        nitrousBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.active_nitrous);
-        gasBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.gas);
+        nitrousBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.active_nitrous_button);
+        gasBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.gas_button);
         shiftUpAnimation = loadPiskelAnimation(R.raw.shift_up_animation);
         overrevAnimation = loadPiskelAnimation(R.raw.overev_animation);
         shiftingAnimation = loadPiskelAnimation(R.raw.shifting_animation);

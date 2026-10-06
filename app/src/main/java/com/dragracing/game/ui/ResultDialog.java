@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import com.dragracing.game.R;
 import com.dragracing.game.data.PlayerData;
@@ -53,23 +53,15 @@ public class ResultDialog extends Dialog {
         TextView tvOpponentET = findViewById(R.id.tvOpponentET);
         TextView tvTopSpeed = findViewById(R.id.tvTopSpeed);
         TextView tvPerfectShifts = findViewById(R.id.tvPerfectShifts);
-        android.view.View statsContainer = findViewById(R.id.statsContainer);
-
-        Button btnRematch = findViewById(R.id.btnRematch);
-        Button btnGarage = findViewById(R.id.btnGarage);
-        Button btnContinue = findViewById(R.id.btnContinue);
+        ImageButton btnRematch = findViewById(R.id.btnRematch);
+        ImageButton btnGarage = findViewById(R.id.btnGarage);
+        ImageButton btnContinue = findViewById(R.id.btnContinue);
 
         // Apply Pixel Font to entire dialog
         Typeface pixelFont = androidx.core.content.res.ResourcesCompat.getFont(getContext(), R.font.pixel_font);
         applyFontToViewTree(findViewById(android.R.id.content), pixelFont);
 
         int prize = engine.calculatePrizeMoney();
-
-        // Initially hide stats to follow "Thông báo thắng/thua sau đó chuyển sang tab thông số"
-        statsContainer.setVisibility(android.view.View.GONE);
-        btnRematch.setVisibility(android.view.View.GONE);
-        btnGarage.setVisibility(android.view.View.GONE);
-        btnContinue.setText("XEM THÔNG SỐ");
 
         // Title and Colors
         if (engine.isFalseStart()) {
@@ -115,15 +107,8 @@ public class ResultDialog extends Dialog {
         });
 
         btnContinue.setOnClickListener(v -> {
-            if (statsContainer.getVisibility() == android.view.View.GONE) {
-                statsContainer.setVisibility(android.view.View.VISIBLE);
-                btnRematch.setVisibility(android.view.View.VISIBLE);
-                btnGarage.setVisibility(android.view.View.VISIBLE);
-                btnContinue.setText("TIẾP TỤC");
-            } else {
-                dismiss();
-                if (callback != null) callback.onContinue();
-            }
+            dismiss();
+            if (callback != null) callback.onContinue();
         });
     }
 
