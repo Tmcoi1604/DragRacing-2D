@@ -18,6 +18,10 @@ import java.util.Locale;
 import java.util.Map;
 
 public class TrackRenderer {
+    private static final float TRACK_AREA_HEIGHT_RATIO = 0.78f;
+    private static final float HORIZON_HEIGHT_RATIO = 0.62f;
+    private static final float COASTAL_ROAD_TOP_RATIO = 574.0f / 768.0f;
+
     public enum EnvironmentType {
         TOKYO_NIGHT,
         ABANDONED_INDUSTRIAL,
@@ -122,6 +126,14 @@ public class TrackRenderer {
         updateEnvironmentPaints();
     }
 
+    public float getRoadTop(float height) {
+        float trackAreaBottom = height * TRACK_AREA_HEIGHT_RATIO;
+        if (environmentType == EnvironmentType.COASTAL_DAY) {
+            return trackAreaBottom * COASTAL_ROAD_TOP_RATIO;
+        }
+        return trackAreaBottom * HORIZON_HEIGHT_RATIO + 10.0f;
+    }
+
     private void updateEnvironmentPaints() {
         switch (environmentType) {
             case TOKYO_NIGHT:
@@ -163,16 +175,17 @@ public class TrackRenderer {
 
     public void render(Canvas canvas, float width, float height, double viewDistance, RaceEngine raceEngine) {
         // Keep the track over the grey lower section of the background.
-        float trackAreaBottom = height * 0.78f;
-        float horizonY = trackAreaBottom * 0.62f;
+        float trackAreaBottom = height * TRACK_AREA_HEIGHT_RATIO;
+        float horizonY = trackAreaBottom * HORIZON_HEIGHT_RATIO;
+        float roadTop = getRoadTop(height);
         float trackHeight = trackAreaBottom - horizonY;
         float laneHeight = trackHeight / 2.0f;
 
         // Start line anchor
         float startX = width * 0.25f;
-        float barrierY = horizonY;
+        float barrierY = roadTop - 10.0f;
 
-        drawAssetTrack(canvas, width, height, horizonY, trackAreaBottom, startX, viewDistance);
+        drawAssetTrack(canvas, width, height, horizonY, trackAreaBottom, roadTop, startX, viewDistance);
         if (false) {
         // 1. Sky
         int skyTop;
@@ -329,7 +342,7 @@ public class TrackRenderer {
 
         }
 
-        drawTrackObjects(canvas, width, horizonY, trackAreaBottom, viewDistance);
+        drawTrackObjects(canvas, width, horizonY, trackAreaBottom, roadTop, viewDistance);
 
         // 6. Starting Line
         double startLineWorldX = -viewDistance * 35.0 + startX;
@@ -351,7 +364,7 @@ public class TrackRenderer {
     }
 
         private boolean drawAssetTrack(Canvas canvas, float width, float height,
-                       float horizonY, float trackAreaBottom, float startX,
+                       float horizonY, float trackAreaBottom, float roadTop, float startX,
                        double viewDistance) {
         Bitmap themeBackground = loadAsset(environmentType.backgroundAsset());
         Bitmap baseTileset = loadAsset("tilesets");
@@ -376,9 +389,7 @@ public class TrackRenderer {
         int sourceTileWidth = Math.min(128, baseTileset.getWidth());
         int sourceTileHeight = Math.min(96, baseTileset.getHeight());
         Rect sourceRoadTile = new Rect(0, 395, sourceTileWidth, 395 + sourceTileHeight);
-        float roadTop = horizonY + 10.0f;
         float dividerY = roadTop + (trackAreaBottom - roadTop) * 0.5f;
-        float laneHeight = dividerY - horizonY;
         float destinationTileWidth = Math.min(128.0f, width);
         
         float roadOffset = (float) ((viewDistance * 35.0) % destinationTileWidth);
@@ -420,8 +431,8 @@ public class TrackRenderer {
         // The original tileset supplies the universal start signal for every track.
         Rect startSignal = new Rect(0, 0, Math.min(130, baseTileset.getWidth()),
             Math.min(230, baseTileset.getHeight()));
-        Rect startSignalDestination = new Rect((int) startX - 18, (int) horizonY - 78,
-            (int) startX + 26, (int) horizonY + 2);
+        Rect startSignalDestination = new Rect((int) startX - 18, (int) roadTop - 88,
+            (int) startX + 26, (int) roadTop - 8);
         canvas.drawBitmap(baseTileset, startSignal, startSignalDestination, assetPaint);
 
         // Each environment contributes a recognizable prop from its own tileset.
@@ -496,19 +507,21 @@ public class TrackRenderer {
             canvas.drawBitmap(coastalTileset, source, destination, assetPaint);
         }
 
-        Rect gullSource = new Rect(500, 690, 730, 820);
+        Rect gullSource = new Rect(500, 760, 640, 860);
         float gullSpacing = 250.0f;
         float gullOffset = (float) (worldX * 0.18 % gullSpacing);
         for (int i = -1; i < (width / gullSpacing) + 2; i++) {
             float x = i * gullSpacing - gullOffset + 90.0f;
+            float gullHeight = 35.0f;
+            float gullWidth = gullHeight * gullSource.width() / gullSource.height();
             RectF destination = new RectF(x, horizonY - 180.0f,
-                x + 62.0f, horizonY - 145.0f);
+                x + gullWidth, horizonY - 180.0f + gullHeight);
             canvas.drawBitmap(coastalTileset, gullSource, destination, assetPaint);
         }
         }
 
         private void drawTrackObjects(Canvas canvas, float width, float horizonY,
-                          float trackAreaBottom, double viewDistance) {
+                          float trackAreaBottom, float roadTop, double viewDistance) {
         Bitmap tileset = loadAsset(environmentType.themeTilesetAsset());
         if (tileset == null) return;
 
@@ -525,7 +538,7 @@ public class TrackRenderer {
         }
 
         if (environmentType == EnvironmentType.COASTAL_DAY) {
-            drawCoastalRoadsideObjects(canvas, width, horizonY, viewDistance, tileset);
+            drawCoastalRoadsideObjects(canvas, width, roadTop, viewDistance, tileset);
             return;
         }
 
@@ -694,7 +707,7 @@ public class TrackRenderer {
         }
         }
 
-        private void drawCoastalRoadsideObjects(Canvas canvas, float width, float horizonY,
+        private void drawCoastalRoadsideObjects(Canvas canvas, float width, float roadTop,
                             double viewDistance, Bitmap coastalTileset) {
         double worldX = viewDistance * 35.0;
         float spacing = 190.0f;
@@ -703,7 +716,7 @@ public class TrackRenderer {
 
         Rect[] roadsideSources = {
             new Rect(0, 0, 345, 315),       // palm cluster
-            new Rect(555, 0, 810, 275),     // tall palm
+            new Rect(550, 0, 840, 245),     // tall palms
             new Rect(225, 520, 455, 705),   // small sand castle
             new Rect(390, 510, 625, 705),   // large sand castle
             new Rect(830, 785, 1024, 1024)  // clam shack
@@ -717,15 +730,15 @@ public class TrackRenderer {
             float objectHeight = heights[index];
             float objectWidth = objectHeight * source.width() / source.height();
             float x = i * spacing - offset;
-            float objectY = horizonY - objectHeight + 4.0f;
-            RectF destination = new RectF(x, objectY, x + objectWidth, horizonY + 4.0f);
+            float objectY = roadTop - objectHeight + 4.0f;
+            RectF destination = new RectF(x, objectY, x + objectWidth, roadTop + 4.0f);
             canvas.drawBitmap(coastalTileset, source, destination, assetPaint);
         }
 
-        drawCoastalSigns(canvas, width, horizonY, worldX, coastalTileset);
+        drawCoastalSigns(canvas, width, roadTop, worldX, coastalTileset);
         }
 
-        private void drawCoastalSigns(Canvas canvas, float width, float horizonY,
+        private void drawCoastalSigns(Canvas canvas, float width, float roadTop,
                           double worldX, Bitmap coastalTileset) {
         Bitmap baseTileset = loadAsset("tilesets");
         Rect coastalSign = new Rect(0, 735, 250, 1024);
@@ -741,8 +754,8 @@ public class TrackRenderer {
             if (bitmap == null) continue;
             float height = 62.0f;
             float objectWidth = height * source.width() / source.height();
-            RectF destination = new RectF(x, horizonY - height + 4.0f,
-                x + objectWidth, horizonY + 4.0f);
+            RectF destination = new RectF(x, roadTop - height + 4.0f,
+                x + objectWidth, roadTop + 4.0f);
             canvas.drawBitmap(bitmap, source, destination, assetPaint);
         }
         }

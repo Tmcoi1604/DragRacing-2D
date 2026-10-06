@@ -381,9 +381,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
             // 2. Draw Cars
             float trackAreaBottom = height * 0.78f;
-            float horizonY = trackAreaBottom * 0.62f;
-            float trackHeight = trackAreaBottom - horizonY;
-            float laneHeight = trackHeight / 2.0f;
+            float roadTop = trackRenderer.getRoadTop(height);
+            float laneHeight = (trackAreaBottom - roadTop) / 2.0f;
             float carScale = 1.15f;
             float carRenderHeight = 45.0f * carScale;
             float carRenderWidth = 185.0f * carScale;
@@ -410,7 +409,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
             }
 
             // Render opponent if it is still within the visible screen area
-            float roadTop = horizonY + 10.0f;
             float laneCenterOffset = (laneHeight - carRenderHeight) * 0.5f;
             if (raceEngine.getOpponentCar() != null && oppScreenX + carRenderWidth > 0) {
                 float oppScreenY = roadTop + laneCenterOffset;
