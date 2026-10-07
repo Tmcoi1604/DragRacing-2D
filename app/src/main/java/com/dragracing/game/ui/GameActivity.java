@@ -11,10 +11,24 @@ import com.dragracing.game.data.Car;
 import com.dragracing.game.data.PlayerData;
 import com.dragracing.game.engine.RaceEngine;
 import com.dragracing.game.render.TrackRenderer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
+    private static final int[] OPPONENT_COLORS = {
+        Color.parseColor("#F44336"),
+        Color.parseColor("#2196F3"),
+        Color.parseColor("#4CAF50"),
+        Color.parseColor("#FF9800"),
+        Color.parseColor("#9C27B0"),
+        Color.parseColor("#00BCD4"),
+        Color.parseColor("#FFEB3B"),
+        Color.parseColor("#E91E63"),
+        Color.parseColor("#FFFFFF"),
+        Color.parseColor("#212121")
+    };
+
     private FrameLayout gameContainer;
     private GameView gameView;
     private RaceEngine raceEngine;
@@ -105,22 +119,24 @@ public class GameActivity extends AppCompatActivity {
 
     private Car generateOpponentCar(Car playerCar, String mode, int diff) {
         List<Car> allCars = PlayerData.getInstance(this).getAllCars();
-        Car base;
+        Car performanceBase = null;
+        Random random = new Random();
 
         if ("CAREER".equals(mode)) {
             if (isBossRace) {
                 // Boss uses a specific car for the stage
                 int index = Math.min(allCars.size() - 1, Math.max(0, diff - 1));
-                base = allCars.get(index);
+                performanceBase = allCars.get(index);
             } else {
                 int careerStep = getIntent().getIntExtra("career_step", 0);
                 int index = Math.max(0, diff - 2 + (careerStep % 2));
                 index = Math.min(allCars.size() - 1, index);
-                base = allCars.get(index);
+                performanceBase = allCars.get(index);
             }
-        } else {
-            // Quick race can use a different model; performance is tuned below.
-            base = allCars.get(new Random().nextInt(allCars.size()));
+        }
+        Car base = chooseRandomOpponentModel(allCars, playerCar, random);
+        if (performanceBase == null && !"QUICK".equals(mode)) {
+            performanceBase = base;
         }
 
         // Clone car specs for AI opponent
@@ -129,33 +145,33 @@ public class GameActivity extends AppCompatActivity {
 
         double horsepower = "QUICK".equals(mode)
             ? playerCar.getEffectiveHorsepower() * hpMult
-            : base.getBaseHorsepower() * hpMult;
+            : performanceBase.getBaseHorsepower() * hpMult;
         double weight = "QUICK".equals(mode)
             ? playerCar.getEffectiveWeight() / hpMult
-            : base.getBaseWeight();
+            : performanceBase.getBaseWeight();
         double grip = "QUICK".equals(mode)
             ? playerCar.getEffectiveGrip() * (0.96 + (hpMult - 1.0) * 0.15)
-            : base.getBaseGrip();
+            : performanceBase.getBaseGrip();
         double shiftTime = "QUICK".equals(mode)
             ? Math.max(0.08, playerCar.getShiftTimeSeconds() / (0.98 + (hpMult - 1.0) * 0.35))
-            : base.getBaseShiftTime();
+            : performanceBase.getBaseShiftTime();
 
         Car opp = new Car(
                 "ai_" + base.getId(),
                 (isBossRace ? "BOSS " : "Rival ") + base.getName(),
                 base.getCarClass(),
                 base.getPrice(),
-                Color.parseColor(isBossRace ? "#FFD600" : "#E91E63"), 
+                chooseRandomOpponentColor(playerCar, random),
                 horsepower,
                 weight,
                 grip,
                 shiftTime,
-                base.getMaxRpm(),
-                base.getIdleRpm(),
-                base.getOptimalShiftMinRpm(),
-                base.getOptimalShiftMaxRpm(),
-                base.getGearRatios(),
-                base.getFinalDrive(),
+                performanceBase != null ? performanceBase.getMaxRpm() : base.getMaxRpm(),
+                performanceBase != null ? performanceBase.getIdleRpm() : base.getIdleRpm(),
+                performanceBase != null ? performanceBase.getOptimalShiftMinRpm() : base.getOptimalShiftMinRpm(),
+                performanceBase != null ? performanceBase.getOptimalShiftMaxRpm() : base.getOptimalShiftMaxRpm(),
+                performanceBase != null ? performanceBase.getGearRatios() : base.getGearRatios(),
+                performanceBase != null ? performanceBase.getFinalDrive() : base.getFinalDrive(),
                 base.getBodyType()
         );
         opp.setImageResourceName(base.getImageResourceName());
@@ -169,6 +185,25 @@ public class GameActivity extends AppCompatActivity {
         opp.setNitroLevel(diff >= 2 ? level : 0);
 
         return opp;
+    }
+
+    private Car chooseRandomOpponentModel(List<Car> cars, Car playerCar, Random random) {
+        List<Car> alternatives = new ArrayList<>();
+        for (Car car : cars) {
+            if (!car.getId().equals(playerCar.getId())) {
+                alternatives.add(car);
+            }
+        }
+        List<Car> candidates = alternatives.isEmpty() ? cars : alternatives;
+        return candidates.get(random.nextInt(candidates.size()));
+    }
+
+    private int chooseRandomOpponentColor(Car playerCar, Random random) {
+        int color;
+        do {
+            color = OPPONENT_COLORS[random.nextInt(OPPONENT_COLORS.length)];
+        } while (color == playerCar.getColor());
+        return color;
     }
 
     private double getQuickRaceOpponentMultiplier(int diff) {
