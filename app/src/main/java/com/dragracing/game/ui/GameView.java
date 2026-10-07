@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Base64;
 import android.util.Log;
@@ -58,6 +59,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     // Control button bounds
     private final RectF gasPedalRect = new RectF();
+    private final Rect nitroSourceRect = new Rect();
     private final RectF shiftUpRect = new RectF();
     private final RectF shiftDownRect = new RectF();
     private final RectF nitroButtonRect = new RectF();
@@ -92,6 +94,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         shiftUpBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.shift_up);
         shiftDownBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.shift_down);
         nitrousBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.active_nitrous_button);
+        if (nitrousBitmap != null) {
+            int cropSize = Math.round(Math.min(nitrousBitmap.getWidth(), nitrousBitmap.getHeight()) * 0.80f);
+            int cropLeft = (nitrousBitmap.getWidth() - cropSize) / 2;
+            int cropTop = (nitrousBitmap.getHeight() - cropSize) / 2;
+            nitroSourceRect.set(cropLeft, cropTop, cropLeft + cropSize, cropTop + cropSize);
+        }
         gasBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.gas_button);
         shiftUpAnimation = loadPiskelAnimation(R.raw.shift_up_animation);
         overrevAnimation = loadPiskelAnimation(R.raw.overev_animation);
@@ -251,10 +259,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
         gasPedalRect.set(width - padding - gasSize, height - gasSize - 24.0f,
                 width - padding, height - 24.0f);
 
-        // Nitro button moved to the left side of the dashboard, matching the reference layout
-        float nitroSize = Math.min(88.0f, width * 0.10f);
+        // Nitro button moved to the left side of the dashboard, matching the reference layout.
+        float nitroSize = Math.min(120.0f, Math.max(90.0f, dashHeight * 0.90f));
         float nitroCenterX = padding + nitroSize * 0.5f;
-        float nitroCenterY = height - nitroSize - 36.0f;
+        float nitroCenterY = height - nitroSize * 0.5f - 24.0f;
         nitroButtonRect.set(
             nitroCenterX - nitroSize * 0.5f,
             nitroCenterY - nitroSize * 0.5f,
@@ -750,7 +758,31 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     private void drawNitroButton(Canvas canvas, CarPhysics player) {
         if (nitrousBitmap != null) {
-            canvas.drawBitmap(nitrousBitmap, null, nitroButtonRect, buttonPaint);
+            float centerX = nitroButtonRect.centerX();
+            float centerY = nitroButtonRect.centerY();
+            float radius = nitroButtonRect.width() * 0.5f;
+            buttonPaint.setColor(Color.argb(230, 18, 22, 28));
+            canvas.drawCircle(centerX, centerY, radius, buttonPaint);
+            canvas.drawBitmap(nitrousBitmap, nitroSourceRect, nitroButtonRect, buttonPaint);
+
+            float labelWidth = nitroButtonRect.width() * 0.70f;
+            float labelHeight = nitroButtonRect.height() * 0.19f;
+            float labelCenterY = centerY + nitroButtonRect.height() * 0.27f;
+            hudBgPaint.setColor(Color.argb(220, 15, 18, 22));
+            canvas.drawRoundRect(
+                centerX - labelWidth * 0.5f,
+                labelCenterY - labelHeight * 0.5f,
+                centerX + labelWidth * 0.5f,
+                labelCenterY + labelHeight * 0.5f,
+                labelHeight * 0.35f,
+                labelHeight * 0.35f,
+                hudBgPaint
+            );
+            textPaint.setColor(Color.WHITE);
+            textPaint.setTypeface(Typeface.DEFAULT_BOLD);
+            textPaint.setTextSize(nitroButtonRect.width() * 0.13f);
+            textPaint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText("NITRO", centerX, labelCenterY + textPaint.getTextSize() * 0.35f, textPaint);
         }
     }
 

@@ -69,16 +69,46 @@ public class PlayerData {
         return null;
     }
 
+    private String getCarPreferencePrefix(Car car) {
+        String carId = car.getId();
+        if (carId.startsWith("car_")) {
+            carId = carId.substring(4);
+        }
+        return "car_" + carId + "_";
+    }
+
+    private String getLegacyCarPreferencePrefix(Car car) {
+        return "car_" + car.getId() + "_";
+    }
+
+    private int getCarPreferenceInt(Car car, String key, int defaultValue) {
+        String prefix = getCarPreferencePrefix(car);
+        String legacyPrefix = getLegacyCarPreferencePrefix(car);
+        if (prefs.contains(prefix + key)) {
+            return prefs.getInt(prefix + key, defaultValue);
+        }
+        if (prefs.contains(legacyPrefix + key)) {
+            return prefs.getInt(legacyPrefix + key, defaultValue);
+        }
+        return defaultValue;
+    }
+
     private void loadCarUpgradesAndColors() {
         for (Car car : allCars) {
-            String prefix = "car_" + car.getId() + "_";
-            car.setEngineLevel(prefs.getInt(prefix + "engine", 0));
-            car.setTurboLevel(prefs.getInt(prefix + "turbo", 0));
-            car.setNitroLevel(prefs.getInt(prefix + "nitro", 0));
-            car.setTiresLevel(prefs.getInt(prefix + "tires", 0));
-            car.setGearboxLevel(prefs.getInt(prefix + "gearbox", 0));
-            car.setWeightLevel(prefs.getInt(prefix + "weight", 0));
-            int savedColor = prefs.getInt(prefix + "color", -1);
+            String prefix = getCarPreferencePrefix(car);
+            String legacyPrefix = getLegacyCarPreferencePrefix(car);
+            car.setEngineLevel(getCarPreferenceInt(car, "engine", 0));
+            car.setTurboLevel(getCarPreferenceInt(car, "turbo", 0));
+            car.setNitroLevel(getCarPreferenceInt(car, "nitro", 0));
+            car.setTiresLevel(getCarPreferenceInt(car, "tires", 0));
+            car.setGearboxLevel(getCarPreferenceInt(car, "gearbox", 0));
+            car.setWeightLevel(getCarPreferenceInt(car, "weight", 0));
+            int savedColor = -1;
+            if (prefs.contains(prefix + "color")) {
+                savedColor = prefs.getInt(prefix + "color", -1);
+            } else if (prefs.contains(legacyPrefix + "color")) {
+                savedColor = prefs.getInt(legacyPrefix + "color", -1);
+            }
             if (savedColor != -1) {
                 car.setColor(savedColor);
             }
@@ -86,7 +116,7 @@ public class PlayerData {
     }
 
     public void saveCar(Car car) {
-        String prefix = "car_" + car.getId() + "_";
+        String prefix = getCarPreferencePrefix(car);
         prefs.edit()
                 .putInt(prefix + "engine", car.getEngineLevel())
                 .putInt(prefix + "turbo", car.getTurboLevel())
